@@ -25,8 +25,34 @@ final class WebSearchStateView: MessageListRowView {
         contentView.addSubview(searchIndicatorView)
         contentView.addSubview(menuButton)
 
-        // Use an overlay button to present system UIMenu
-        searchIndicatorView.isUserInteractionEnabled = false
+        menuButton.menu = .init(children: [
+            UIDeferredMenuElement.uncached { [weak self] completion in
+                let content = self?.results.map { result in
+                    UIMenu(title: result.title, children: [
+                        UIAction(
+                            title: String(localized: "View"),
+                            image: UIImage(systemName: "eye")
+                        ) { [weak self] _ in
+                            Indicator.present(result.url, referencedView: self)
+                        },
+                        UIMenu(title: String(localized: "Share") + " " + (result.url.host ?? ""), options: [.displayInline], children: [
+                            UIAction(title: String(localized: "Share"), image: UIImage(systemName: "safari")) { [weak self] _ in
+                                guard let self else { return }
+                                DisposableExporter(data: Data(result.url.absoluteString.utf8), pathExtension: "txt")
+                                    .run(anchor: self, mode: .text)
+                            },
+                            UIAction(
+                                title: String(localized: "Open in Default Browser"),
+                                image: UIImage(systemName: "safari")
+                            ) { _ in
+                                UIApplication.shared.open(result.url)
+                            },
+                        ]),
+                    ])
+                } ?? []
+                completion(content)
+            },
+        ])
     }
 
     override func layoutSubviews() {
@@ -67,34 +93,6 @@ final class WebSearchStateView: MessageListRowView {
     override func themeDidUpdate() {
         super.themeDidUpdate()
         searchIndicatorView.textLabel.font = theme.fonts.body
-    }
-
-    @objc func didTap() {
-        guard !results.isEmpty else { return }
-        let menu = UIMenu(title: String(localized: "Search Results"), children: results.map { result in
-            UIMenu(title: result.title, children: [
-                UIAction(
-                    title: String(localized: "View"),
-                    image: UIImage(systemName: "eye")
-                ) { [weak self] _ in
-                    Indicator.present(result.url, referencedView: self)
-                },
-                UIMenu(title: String(localized: "Share") + " " + (result.url.host ?? ""), options: [.displayInline], children: [
-                    UIAction(title: String(localized: "Share"), image: UIImage(systemName: "safari")) { [weak self] _ in
-                        guard let self else { return }
-                        DisposableExporter(data: Data(result.url.absoluteString.utf8), pathExtension: "txt")
-                            .run(anchor: self, mode: .text)
-                    },
-                    UIAction(
-                        title: String(localized: "Open in Default Browser"),
-                        image: UIImage(systemName: "safari")
-                    ) { _ in
-                        UIApplication.shared.open(result.url)
-                    },
-                ]),
-            ])
-        })
-        menuButton.menu = menu
     }
 }
 

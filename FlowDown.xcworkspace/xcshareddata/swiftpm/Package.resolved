@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Lakr233/AlertController",
       "state" : {
-        "revision" : "13d8d76691142c919e4f3e9ac4809150e4adfde3",
-        "version" : "2.0.1"
+        "revision" : "b6d8a1f743d3acccf2b996327e1168b59656e4c9",
+        "version" : "2.0.2"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Lakr233/ConfigurableKit",
       "state" : {
-        "revision" : "54d72f77c5e39a6e677ed7fc1ba66083809637e0",
-        "version" : "3.1.0"
+        "revision" : "3d863f62c64588d788d9877c130bc51104049bb0",
+        "version" : "3.1.1"
       }
     },
     {

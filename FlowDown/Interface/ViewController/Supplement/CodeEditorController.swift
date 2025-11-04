@@ -13,12 +13,12 @@ import UIKit
 class CodeEditorController: UIViewController {
     let textView = RunestoneEditorView.new()
 
-    private lazy var doneBarButtonItem: UIBarButtonItem = .init(
+    lazy var doneBarButtonItem: UIBarButtonItem = .init(
         barButtonSystemItem: .done,
         target: self,
         action: #selector(done)
     )
-    private lazy var cancelBarButtonItem: UIBarButtonItem = .init(
+    lazy var cancelBarButtonItem: UIBarButtonItem = .init(
         barButtonSystemItem: .cancel,
         target: self,
         action: #selector(dispose)

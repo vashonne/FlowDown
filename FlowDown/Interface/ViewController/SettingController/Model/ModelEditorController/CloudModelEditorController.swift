@@ -235,7 +235,11 @@ class CloudModelEditorController: StackScrollController {
             var text = model.bodyFields
             if text.isEmpty { text = "{}" }
 
-            let textEditor = JsonEditorController(text: text, showsThinkingMenu: true)
+            let textEditor = JsonEditorController(text: text)
+            textEditor.secondaryMenuBuilder = { _ in
+                UIMenu(children: [
+                ])
+            }
 
             textEditor.onTextDidChange = { draft in
                 let trimmed = draft.trimmingCharacters(in: .whitespacesAndNewlines)

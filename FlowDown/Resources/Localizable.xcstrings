@@ -43,6 +43,7 @@
       "shouldTranslate" : false
     },
     "%@ · %@ tokens" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2659,6 +2660,7 @@
       }
     },
     "Custom Thinking Budget" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2669,6 +2671,7 @@
       }
     },
     "Custom…" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -4011,6 +4014,7 @@
       }
     },
     "Enable Thinking Flag" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5553,6 +5557,7 @@
       }
     },
     "High" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6826,6 +6831,7 @@
       }
     },
     "Low" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8845,6 +8851,7 @@
       }
     },
     "Preset Plan" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9038,6 +9045,7 @@
       }
     },
     "Reasoning Effort" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9054,6 +9062,7 @@
       }
     },
     "Reasoning Payload" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9793,6 +9802,7 @@
       }
     },
     "Set the thinking_budget tokens that will be merged into the request body." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -11108,6 +11118,7 @@
       }
     },
     "Thinking Budget" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -11134,6 +11145,7 @@
       }
     },
     "Thinking Mode Payload" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11150,6 +11162,7 @@
       }
     },
     "Thinking Mode Presets" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11825,6 +11838,7 @@
       }
     },
     "Unable to %@ because the JSON payload is invalid. Please fix the syntax and try again." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

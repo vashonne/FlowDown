@@ -148,6 +148,12 @@
             "state" : "translated",
             "value" : "%1$lld servers imported successfully, %2$lld failed."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "成功导入 %1$lld 个服务器，%2$lld 个失败。"
+          }
         }
       }
     },
@@ -157,6 +163,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$lld templates imported successfully, %2$lld failed."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "成功导入 %1$lld 个模板，%2$lld 个失败。"
           }
         }
       }
@@ -3517,6 +3529,12 @@
             "state" : "translated",
             "value" : "Disabled built-in tools: %1$lld. Skipped: %2$lld. MCP servers disabled: %3$lld of %4$lld."
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已禁用内置工具：%1$lld 个。跳过：%2$lld 个。已禁用 MCP 服务器：%3$lld / %4$lld。"
+          }
         }
       }
     },
@@ -4410,6 +4428,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enabled built-in tools: %1$lld. Skipped: %2$lld. MCP servers enabled: %3$lld of %4$lld."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已启用内置工具：%1$lld 个。跳过：%2$lld 个。已启用 MCP 服务器：%3$lld / %4$lld。"
           }
         }
       }

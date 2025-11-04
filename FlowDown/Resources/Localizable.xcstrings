@@ -1074,6 +1074,15 @@
     "Ask Model" : {
 
     },
+    "Ask Model + Image" : {
+
+    },
+    "Ask Model + Image + Tools" : {
+
+    },
+    "Ask Model + Tools" : {
+
+    },
     "Audio" : {
       "localizations" : {
         "en" : {
@@ -5868,6 +5877,9 @@
         }
       }
     },
+    "Image" : {
+
+    },
     "Imagination" : {
       "localizations" : {
         "en" : {
@@ -9096,6 +9108,18 @@
         }
       }
     },
+    "Quick Reply with Image" : {
+
+    },
+    "Quick Reply with Image & Tools" : {
+
+    },
+    "Quick Reply with Image and Tools" : {
+
+    },
+    "Quick Reply with Tools" : {
+
+    },
     "Raw Content" : {
       "localizations" : {
         "en" : {
@@ -9787,6 +9811,9 @@
         }
       }
     },
+    "Select an image to include." : {
+
+    },
     "Select as Default" : {
       "localizations" : {
         "en" : {
@@ -9850,6 +9877,15 @@
           }
         }
       }
+    },
+    "Send a message with an image and get the model's response." : {
+
+    },
+    "Send a message with an image, allow tools, and get the response." : {
+
+    },
+    "Send a message, allow model tools, and get the response." : {
+
     },
     "Send us an email." : {
       "localizations" : {
@@ -11092,6 +11128,9 @@
         }
       }
     },
+    "The provided image could not be processed." : {
+
+    },
     "The request to fetch updates has been sent. Depending on the amount of data, it may take some time to complete." : {
       "localizations" : {
         "en" : {
@@ -11107,6 +11146,12 @@
           }
         }
       }
+    },
+    "The selected model does not support image inputs." : {
+
+    },
+    "The selected model does not support tool calls." : {
+
     },
     "The server is currently disabled." : {
       "localizations" : {
@@ -11443,6 +11488,9 @@
           }
         }
       }
+    },
+    "This shortcut does not accept images." : {
+
     },
     "This value will be added to the request as additional header." : {
       "localizations" : {

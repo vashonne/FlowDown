@@ -1680,6 +1680,22 @@
         }
       }
     },
+    "Choose the default model for new conversations." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose the default model for new conversations."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择新对话开始是使用的模型。"
+          }
+        }
+      }
+    },
     "City: %@" : {
       "localizations" : {
         "en" : {
@@ -2926,6 +2942,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "默认"
+          }
+        }
+      }
+    },
+    "Default conversation model set to %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default conversation model set to %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新对话开始时将会使用模型：%@。"
           }
         }
       }
@@ -10300,6 +10332,54 @@
         }
       }
     },
+    "Set Conversation Model" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Conversation Model"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置对话模型"
+          }
+        }
+      }
+    },
+    "Set conversation model to ${model}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set conversation model to ${model}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对话模型设置：${model}"
+          }
+        }
+      }
+    },
+    "Set Model" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Model"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置模型"
+          }
+        }
+      }
+    },
     "Set the strategy for handling runtime resource cache. Allowing the use of cache can speed up inference and save energy, but may cause the software to close unexpectedly." : {
       "localizations" : {
         "en" : {
@@ -14181,6 +14261,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "应该由哪个模型来回答？"
+          }
+        }
+      }
+    },
+    "Which model should be the default?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which model should be the default?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你希望选择哪个模型作为默认？"
           }
         }
       }

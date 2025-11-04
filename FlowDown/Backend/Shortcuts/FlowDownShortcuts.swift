@@ -13,6 +13,15 @@ struct FlowDownAppShortcuts: AppShortcutsProvider {
                 shortTitle: LocalizedStringResource("Ask Model", defaultValue: "Ask Model"),
                 systemImageName: "text.bubble"
             ),
+            AppShortcut(
+                intent: SetConversationModelIntent(),
+                phrases: [
+                    "Set conversation model on \(.applicationName)",
+                    "Set default model on \(.applicationName)",
+                ],
+                shortTitle: LocalizedStringResource("Set Model", defaultValue: "Set Model"),
+                systemImageName: "slider.horizontal.3"
+            ),
         ]
 
         if #available(iOS 18.0, macCatalyst 18.0, *) {

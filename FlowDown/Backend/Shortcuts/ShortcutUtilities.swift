@@ -98,6 +98,11 @@ enum ShortcutUtilities {
                 continue
             }
 
+            if tool is MTWebSearchTool {
+                skipped.append(tool.interfaceName)
+                continue
+            }
+
             if tool is MCPTool {
                 skipped.append(tool.interfaceName)
                 continue
@@ -136,7 +141,7 @@ enum ShortcutUtilities {
                 guard let tool = manager.tools.first(where: { String(reflecting: type(of: $0)) == typeName }) else {
                     return false
                 }
-                if tool is MTWaitForNextRound || tool is MCPTool {
+                if tool is MTWaitForNextRound || tool is MTWebSearchTool || tool is MCPTool {
                     return false
                 }
                 if !tool.isEnabled {

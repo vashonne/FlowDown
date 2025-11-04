@@ -91,6 +91,7 @@ extension ShortcutsEntities {
                     guard processedTypes.insert(typeIdentifier).inserted else { continue }
 
                     if tool is MTWaitForNextRound { continue }
+                    if tool is MTWebSearchTool { continue }
                     if tool is MCPTool { continue }
 
                     let typeName = String(reflecting: type(of: tool))

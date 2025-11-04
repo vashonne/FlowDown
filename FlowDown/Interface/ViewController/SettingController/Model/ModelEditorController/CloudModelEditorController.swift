@@ -228,26 +228,38 @@ class CloudModelEditorController: StackScrollController {
         stackView.addArrangedSubview(SeparatorView())
 
         // additional body fields
-        let bodyFieldsEditorView = ConfigurableInfoView().setTapBlock { view in
+        let bodyFieldsEditorView = ConfigurableInfoView()
+        bodyFieldsEditorView.setTapBlock { [weak self] view in
+            guard let self else { return }
             guard let model = ModelManager.shared.cloudModel(identifier: model?.id) else { return }
             var text = model.bodyFields
             if text.isEmpty { text = "{}" }
-            let textEditor = JsonEditorController(text: text)
+
+            let textEditor = JsonEditorController(text: text, showsThinkingMenu: true)
+
+            textEditor.onTextDidChange = { draft in
+                let trimmed = draft.trimmingCharacters(in: .whitespacesAndNewlines)
+                if trimmed.isEmpty || Self.isEmptyJsonObject(draft) {
+                    view.configure(value: String(localized: "N/A"))
+                } else {
+                    view.configure(value: String(localized: "Configured"))
+                }
+            }
+
             textEditor.title = String(localized: "Edit Additional Body Fields")
             textEditor.collectEditedContent { result in
-                // Validate JSON
                 guard let data = result.data(using: .utf8),
                       (try? JSONSerialization.jsonObject(with: data)) != nil
                 else {
                     return
                 }
-                // Normalize empty JSON objects to empty string
                 let normalizedResult = Self.isEmptyJsonObject(result) ? "" : result
-                ModelManager.shared.editCloudModel(identifier: model.id) {
-                    $0.update(\.bodyFields, to: normalizedResult)
+                ModelManager.shared.editCloudModel(identifier: model.id) { editable in
+                    editable.update(\.bodyFields, to: normalizedResult)
                 }
                 view.configure(value: normalizedResult.isEmpty ? String(localized: "N/A") : String(localized: "Configured"))
             }
+
             view.parentViewController?.navigationController?.pushViewController(textEditor, animated: true)
         }
         bodyFieldsEditorView.configure(icon: .init(systemName: "pencil"))
@@ -257,7 +269,6 @@ class CloudModelEditorController: StackScrollController {
         bodyFieldsEditorView.configure(value: hasBodyFields ? String(localized: "Configured") : String(localized: "N/A"))
 
         stackView.addArrangedSubviewWithMargin(bodyFieldsEditorView)
-        stackView.addArrangedSubview(SeparatorView())
 
         stackView.addArrangedSubviewWithMargin(
             ConfigurableSectionFooterView()
@@ -632,7 +643,12 @@ class CloudModelEditorController: StackScrollController {
                     return
                 }
 
-                let menuElements = self.buildModelSelectionMenu(from: list, modelId: modelId, view: view)
+                let menuElements = self.buildModelSelectionMenu(from: list) { selection in
+                    ModelManager.shared.editCloudModel(identifier: model.id) {
+                        $0.update(\.model_identifier, to: selection)
+                    }
+                    view.configure(value: selection)
+                }
                 completion(menuElements)
             }
         }
@@ -647,7 +663,10 @@ class CloudModelEditorController: StackScrollController {
         ]
     }
 
-    private func buildModelSelectionMenu(from list: [String], modelId: CloudModel.ID, view: ConfigurableInfoView) -> [UIMenuElement] {
+    private func buildModelSelectionMenu(
+        from list: [String],
+        selectionHandler: @escaping (String) -> Void
+    ) -> [UIMenuElement] {
         var buildSections: [String: [(String, String)]] = [:]
         for item in list {
             var scope = ""
@@ -673,10 +692,7 @@ class CloudModelEditorController: StackScrollController {
                 options: options,
                 children: items.map { item in
                     UIAction(title: item.0) { _ in
-                        ModelManager.shared.editCloudModel(identifier: modelId) {
-                            $0.update(\.model_identifier, to: item.1)
-                        }
-                        view.configure(value: item.1)
+                        selectionHandler(item.1)
                     }
                 }
             ))

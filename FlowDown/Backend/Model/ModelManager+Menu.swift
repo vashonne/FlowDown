@@ -11,12 +11,6 @@ import Foundation
 import Storage
 import UIKit
 
-#if targetEnvironment(macCatalyst)
-    let modelGroupImage: UIImage? = .init(systemName: "folder")
-#else
-    let modelGroupImage: UIImage? = nil
-#endif
-
 extension ModelManager {
     private func openModelManagementPage(controller: UIViewController?) {
         guard let controller else { return }
@@ -81,7 +75,6 @@ extension ModelManager {
             let key = key.isEmpty ? String(localized: "Ungrouped") : key
             localMenuChildren.append(UIMenu(
                 title: key,
-                image: modelGroupImage,
                 options: localMenuChildrenOptions,
                 children: items.map { item in
                     UIAction(title: item.0, state: item.1.id == currentSelection ? .on : .off) { _ in
@@ -97,7 +90,6 @@ extension ModelManager {
             let key = key.isEmpty ? String(localized: "Ungrouped") : key
             cloudMenuChildren.append(UIMenu(
                 title: key,
-                image: modelGroupImage,
                 options: cloudMenuChildrenOptions,
                 children: items.map { item in
                     UIAction(title: item.0, state: item.1.id == currentSelection ? .on : .off) { _ in
@@ -113,10 +105,46 @@ extension ModelManager {
             finalOptions.insert(.displayInline)
         }
 
+        var leadingElements: [UIMenuElement] = []
+
+        let totalSections = localBuildSections.count + cloudBuildSections.count
+        let shouldShowRelatedModels = totalSections > 2
+
+        if shouldShowRelatedModels, let currentSelection, !currentSelection.isEmpty {
+            var relatedEntries: [(title: String, identifier: ModelIdentifier)] = []
+
+            if let match = localModels.first(where: { $0.id == currentSelection }) {
+                let groupKey = match.scopeIdentifier
+                let peers = localBuildSections[groupKey] ?? []
+                relatedEntries = peers.map { ($0.0, $0.1.id) }
+            } else if let match = cloudModels.first(where: { $0.id == currentSelection }) {
+                let groupKey = match.auxiliaryIdentifier
+                let peers = cloudBuildSections[groupKey] ?? []
+                relatedEntries = peers.map { ($0.0, $0.1.id) }
+            }
+
+            if relatedEntries.count > 1 {
+                relatedEntries.sort { lhs, rhs in
+                    if lhs.identifier == currentSelection { return true }
+                    if rhs.identifier == currentSelection { return false }
+                    return lhs.title < rhs.title
+                }
+
+                let relatedActions: [UIAction] = relatedEntries.map { entry in
+                    UIAction(
+                        title: entry.title,
+                        state: entry.identifier == currentSelection ? .on : .off
+                    ) { _ in
+                        onCompletion(entry.identifier)
+                    }
+                }
+                leadingElements.append(contentsOf: relatedActions)
+            }
+        }
+
         if allowSelectionWithNone {
             finalChildren.append(UIAction(
-                title: String(localized: "Use None"),
-                image: .init(systemName: "circle.dashed")
+                title: String(localized: "Use None")
             ) { _ in
                 onCompletion("")
             })
@@ -126,7 +154,6 @@ extension ModelManager {
             if appleIntelligenceAvailable {
                 finalChildren.append(UIAction(
                     title: AppleIntelligenceModel.shared.modelDisplayName,
-                    image: UIImage(systemName: "apple.intelligence"),
                     state: currentSelection == AppleIntelligenceModel.shared.modelIdentifier ? .on : .off
                 ) { _ in
                     onCompletion(AppleIntelligenceModel.shared.modelIdentifier)
@@ -137,7 +164,6 @@ extension ModelManager {
         if !localMenuChildren.isEmpty {
             finalChildren.append(UIMenu(
                 title: String(localized: "Local Models"),
-                image: .modelLocal,
                 options: finalOptions,
                 children: localMenuChildren
             ))
@@ -145,10 +171,13 @@ extension ModelManager {
         if !cloudMenuChildren.isEmpty {
             finalChildren.append(UIMenu(
                 title: String(localized: "Cloud Models"),
-                image: .modelCloud,
                 options: finalOptions,
                 children: cloudMenuChildren
             ))
+        }
+
+        if !leadingElements.isEmpty {
+            finalChildren.insert(contentsOf: leadingElements, at: 0)
         }
 
         return finalChildren

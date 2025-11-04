@@ -26,10 +26,7 @@ extension ConversationSession {
         let message = appendNewMessage(role: .assistant)
 
         // Runtime additional body fields (merged with model's configured bodyFields)
-        var additionalBodyField = [String: Any]()
-        if let model = ModelManager.shared.cloudModel(identifier: modelID),
-           URL(string: model.endpoint)?.host?.lowercased() == "openrouter.ai"
-        { additionalBodyField["reasoning"] = [String: String]() }
+        let additionalBodyField = [String: Any]()
 
         let stream = try await ModelManager.shared.streamingInfer(
             with: modelID,

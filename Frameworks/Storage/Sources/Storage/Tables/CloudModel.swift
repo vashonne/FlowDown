@@ -30,7 +30,6 @@ public final class CloudModel: Identifiable, Codable, Equatable, Hashable, Table
     public package(set) var context: ModelContextLength = .short_8k
     public package(set) var temperature_preference: ModelTemperaturePreference = .inherit
     public package(set) var temperature_override: Double?
-
     // can be used when loading model from our server
     // present to user on the top of the editor page
     public package(set) var comment: String = ""

@@ -12,6 +12,7 @@ public class QuickSettingBar: EditorSectionView {
 
     let modelPicker = BlockButton(text: "", icon: "asterisk")
     let modelPickerRightClickFinder = RightClickFinder()
+
     let browsingToggle = ToggleBlockButton(
         text: NSLocalizedString("Web Browsing", bundle: .module, comment: ""),
         icon: "server"
@@ -33,7 +34,7 @@ public class QuickSettingBar: EditorSectionView {
 
     var height: CGFloat {
         if isOpen {
-            buttons.map(\.intrinsicContentSize.height).max() ?? 0
+            buttons.filter { !$0.isHidden }.map(\.intrinsicContentSize.height).max() ?? 0
         } else {
             0
         }
@@ -122,14 +123,15 @@ public class QuickSettingBar: EditorSectionView {
         guard isOpen else { return }
 
         buttons.forEach { $0.transform = .identity }
-        let sizes = buttons.map(\.intrinsicContentSize)
+        let visibleButtons = buttons.filter { !$0.isHidden }
+        let sizes = visibleButtons.map(\.intrinsicContentSize)
 
         var anchorX: CGFloat = horizontalAdjustment
-        for idx in 0 ..< buttons.count {
-            let size = sizes[idx]
+        for (index, button) in visibleButtons.enumerated() {
+            let size = sizes[index]
             assert(size.width > 0)
             assert(size.height > 0)
-            buttons[idx].frame = .init(
+            button.frame = .init(
                 x: anchorX,
                 y: 0,
                 width: size.width,
@@ -138,7 +140,7 @@ public class QuickSettingBar: EditorSectionView {
             anchorX += size.width + 10
         }
 
-        let lastOne = buttons.last?.frame.maxX ?? 0
+        let lastOne = visibleButtons.last?.frame.maxX ?? 0
         let contentSizeWidth = lastOne + horizontalAdjustment
         scrollView.contentSize = .init(width: contentSizeWidth, height: height)
     }

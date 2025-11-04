@@ -155,7 +155,7 @@ extension ModelManager {
     }
 
     func testCloudModel(_ model: CloudModel, completion: @escaping (Result<Void, Error>) -> Void) {
-        let dic: [String: Any] = [
+        var dic: [String: Any] = [
             "model": model.model_identifier,
             "stream": true,
             "messages": [
@@ -169,6 +169,10 @@ extension ModelManager {
                 ],
             ],
         ]
+        let additional = mergedBodyFields(for: model, runtime: [:])
+        for (key, value) in additional where dic[key] == nil {
+            dic[key] = value
+        }
         guard let data = try? JSONSerialization.data(withJSONObject: dic),
               let endpoint = URL(string: model.endpoint)
         else {
@@ -250,24 +254,18 @@ extension ModelManager {
 extension ModelManager {
     static let indicatorText = " ●"
 
-    private func chatService(for identifier: ModelIdentifier, additionalBodyField: [String: Any]) throws -> any ChatService {
+    private func chatService(
+        for identifier: ModelIdentifier,
+        additionalBodyField: [String: Any]
+    ) throws -> any ChatService {
         if #available(iOS 26.0, macCatalyst 26.0, *), identifier == AppleIntelligenceModel.shared.modelIdentifier {
             return AppleIntelligenceChatClient()
         }
         if let model = cloudModel(identifier: identifier) {
-            // Parse model's bodyFields JSON string
-            var mergedBodyFields: [String: Any] = [:]
-            if !model.bodyFields.isEmpty,
-               let data = model.bodyFields.data(using: .utf8),
-               let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-            {
-                mergedBodyFields = jsonObject
-            }
-
-            // Merge with runtime additionalBodyField (runtime takes precedence)
-            for (key, value) in additionalBodyField {
-                mergedBodyFields[key] = value
-            }
+            let mergedBodyFields = mergedBodyFields(
+                for: model,
+                runtime: additionalBodyField
+            )
 
             return RemoteChatClient(
                 model: model.model_identifier,
@@ -332,7 +330,10 @@ extension ModelManager {
         tools: [ChatRequestBody.Tool]? = nil,
         additionalBodyField: [String: Any] = [:]
     ) async throws -> InferenceMessage {
-        let client = try chatService(for: modelID, additionalBodyField: additionalBodyField)
+        let client = try chatService(
+            for: modelID,
+            additionalBodyField: additionalBodyField
+        )
         let requestTemperature: Double = switch temperatureStrategy(for: modelID) {
         case let .send(value):
             value
@@ -370,7 +371,10 @@ extension ModelManager {
         tools: [ChatRequestBody.Tool]? = nil,
         additionalBodyField: [String: Any] = [:]
     ) async throws -> AsyncThrowingStream<InferenceMessage, any Error> {
-        let client = try chatService(for: modelID, additionalBodyField: additionalBodyField)
+        let client = try chatService(
+            for: modelID,
+            additionalBodyField: additionalBodyField
+        )
         client.collectedErrors = nil
         let requestTemperature: Double = switch temperatureStrategy(for: modelID) {
         case let .send(value):
@@ -579,5 +583,23 @@ extension ModelManager {
         let tokens = encoder.encode(text: estimatedInferenceText)
 
         return tokens.count + estimatedAdditionalTokens
+    }
+
+    private func mergedBodyFields(
+        for model: CloudModel,
+        runtime: [String: Any]
+    ) -> [String: Any] {
+        var merged: [String: Any] = [:]
+        if !model.bodyFields.isEmpty,
+           let data = model.bodyFields.data(using: .utf8),
+           let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        {
+            merged = jsonObject
+        }
+
+        for (key, value) in runtime {
+            merged[key] = value
+        }
+        return merged
     }
 }

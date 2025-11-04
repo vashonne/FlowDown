@@ -16,7 +16,6 @@ extension CloudModel {
             return name
         }
 
-        // Fall back to original logic
         var ret = model_identifier
         let scope = scopeIdentifier
         if !scope.isEmpty, ret.hasPrefix(scopeIdentifier + "/") {

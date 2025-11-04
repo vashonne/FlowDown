@@ -42,6 +42,22 @@
     "%@" : {
       "shouldTranslate" : false
     },
+    "%@ · %@ tokens" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@ tokens"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@ 令牌"
+          }
+        }
+      }
+    },
     "%@ Copy" : {
       "localizations" : {
         "en" : {
@@ -89,6 +105,9 @@
           }
         }
       }
+    },
+    "%lld" : {
+
     },
     "%lld servers imported successfully, %lld failed." : {
       "localizations" : {
@@ -1768,7 +1787,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "折叠推理"
+            "value" : "折叠思考过程"
           }
         }
       }
@@ -2635,6 +2654,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自定义的颜色标签"
+          }
+        }
+      }
+    },
+    "Custom Thinking Budget" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义思考预算"
+          }
+        }
+      }
+    },
+    "Custom…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义"
           }
         }
       }
@@ -3971,6 +4010,22 @@
         }
       }
     },
+    "Enable Thinking Flag" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Thinking Flag"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Thinking 标识"
+          }
+        }
+      }
+    },
     "Enable this to automatically collapse reasoning content after the reasoning is completed. This is useful for keeping the chat interface clean and focused on the final response." : {
       "localizations" : {
         "en" : {
@@ -3982,7 +4037,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "启用这个选项将在推理结束时自动折叠推理内容。"
+            "value" : "启用这个选项将在推理结束时自动折叠思考内容。"
           }
         }
       }
@@ -4630,6 +4685,12 @@
     },
     "Extra headers and body fields are optional, and can be used to add extra information to the request. They should be in JSON format with key-value pairs." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra headers and body fields are optional, and can be used to add extra information to the request. They should be in JSON format with key-value pairs."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5137,6 +5198,12 @@
     },
     "Finished" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finished"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5481,6 +5548,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "报头"
+          }
+        }
+      }
+    },
+    "High" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高"
           }
         }
       }
@@ -6742,6 +6825,22 @@
         }
       }
     },
+    "Low" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低"
+          }
+        }
+      }
+    },
     "Magical @ 2.0" : {
       "localizations" : {
         "en" : {
@@ -7591,6 +7690,12 @@
     },
     "Networking" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Networking"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8739,6 +8844,22 @@
         }
       }
     },
+    "Preset Plan" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preset Plan"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "预设方案"
+          }
+        }
+      }
+    },
     "Preview" : {
       "localizations" : {
         "en" : {
@@ -8912,6 +9033,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "查看文档"
+          }
+        }
+      }
+    },
+    "Reasoning Effort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reasoning Effort"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "思考深度"
+          }
+        }
+      }
+    },
+    "Reasoning Payload" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reasoning Payload"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reasoning 参数负载"
           }
         }
       }
@@ -9635,6 +9788,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "设置处理运行时资源缓存的策略。允许使用缓存会加快推理速度，节约能源，但可能会导致软件意外关闭。"
+          }
+        }
+      }
+    },
+    "Set the thinking_budget tokens that will be merged into the request body." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置对模型的思考预算字段，将会被添加入请求体中"
           }
         }
       }
@@ -10944,6 +11107,16 @@
         }
       }
     },
+    "Thinking Budget" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "思考预算"
+          }
+        }
+      }
+    },
     "Thinking finished without output any content." : {
       "localizations" : {
         "en" : {
@@ -10956,6 +11129,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "思考已完成，但没有输出任何内容。"
+          }
+        }
+      }
+    },
+    "Thinking Mode Payload" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thinking Mode Payload"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thinking Mode 负载"
+          }
+        }
+      }
+    },
+    "Thinking Mode Presets" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thinking Mode Presets"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "思考模式预设"
           }
         }
       }
@@ -11138,6 +11343,12 @@
     },
     "This value will be added to the request body as additional fields." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This value will be added to the request body as additional fields."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11609,6 +11820,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "关闭同步仅暂停后续更新；现有数据保持不变。稍后重新开启将先获取最新状态再继续同步。"
+          }
+        }
+      }
+    },
+    "Unable to %@ because the JSON payload is invalid. Please fix the syntax and try again." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法进行 %@ 因为当前的 JSON 格式并不正确。请检查并修正格式后再试。"
           }
         }
       }

@@ -93,7 +93,11 @@ extension ConversationManager {
         Task.detached {
             await MainActor.run { onConversationCreated(conv.id) }
             do {
-                let stream = try await ModelManager.shared.streamingInfer(with: model, input: messageBody)
+                let stream = try await ModelManager.shared.streamingInfer(
+                    with: model,
+                    input: messageBody,
+                    additionalBodyField: [:]
+                )
                 let mess = sess.appendNewMessage(role: .assistant)
                 for try await resp in stream where !resp.content.isEmpty {
                     mess.update(\.document, to: resp.content)

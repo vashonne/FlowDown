@@ -169,9 +169,14 @@ extension ModelManager {
                 ],
             ],
         ]
-        let additional = mergedBodyFields(for: model, runtime: [:])
-        for (key, value) in additional where dic[key] == nil {
-            dic[key] = value
+        // Get model's configured bodyFields for testing
+        if !model.bodyFields.isEmpty,
+           let data = model.bodyFields.data(using: .utf8),
+           let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        {
+            for (key, value) in jsonObject where dic[key] == nil {
+                dic[key] = value
+            }
         }
         guard let data = try? JSONSerialization.data(withJSONObject: dic),
               let endpoint = URL(string: model.endpoint)
@@ -254,6 +259,20 @@ extension ModelManager {
 extension ModelManager {
     static let indicatorText = " ●"
 
+    /// Get the body fields configured for a cloud model
+    /// - Parameter identifier: The model identifier
+    /// - Returns: A dictionary of body fields, or empty dictionary if not found or empty
+    public func modelBodyFields(for identifier: ModelIdentifier) -> [String: Any] {
+        guard let model = cloudModel(identifier: identifier),
+              !model.bodyFields.isEmpty,
+              let data = model.bodyFields.data(using: .utf8),
+              let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else {
+            return [:]
+        }
+        return jsonObject
+    }
+
     private func chatService(
         for identifier: ModelIdentifier,
         additionalBodyField: [String: Any]
@@ -262,11 +281,8 @@ extension ModelManager {
             return AppleIntelligenceChatClient()
         }
         if let model = cloudModel(identifier: identifier) {
-            let mergedBodyFields = mergedBodyFields(
-                for: model,
-                runtime: additionalBodyField
-            )
-
+            // Use additionalBodyField directly without merging model's bodyFields
+            // Callers should explicitly merge bodyFields if needed
             return RemoteChatClient(
                 model: model.model_identifier,
                 baseURL: model.endpoint,
@@ -275,7 +291,7 @@ extension ModelManager {
                     "HTTP-Referer": "https://flowdown.ai/",
                     "X-Title": "FlowDown",
                 ],
-                additionalBodyField: mergedBodyFields
+                additionalBodyField: additionalBodyField
             )
         } else if let model = localModel(identifier: identifier) {
             return MLXChatClient(url: modelContent(for: model))
@@ -583,23 +599,5 @@ extension ModelManager {
         let tokens = encoder.encode(text: estimatedInferenceText)
 
         return tokens.count + estimatedAdditionalTokens
-    }
-
-    private func mergedBodyFields(
-        for model: CloudModel,
-        runtime: [String: Any]
-    ) -> [String: Any] {
-        var merged: [String: Any] = [:]
-        if !model.bodyFields.isEmpty,
-           let data = model.bodyFields.data(using: .utf8),
-           let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-        {
-            merged = jsonObject
-        }
-
-        for (key, value) in runtime {
-            merged[key] = value
-        }
-        return merged
     }
 }

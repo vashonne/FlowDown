@@ -25,8 +25,8 @@ extension ConversationSession {
 
         let message = appendNewMessage(role: .assistant)
 
-        // Runtime additional body fields (merged with model's configured bodyFields)
-        let additionalBodyField = [String: Any]()
+        // For normal chat, use model's configured bodyFields (includes thinking mode, etc.)
+        let additionalBodyField = ModelManager.shared.modelBodyFields(for: modelID)
 
         let stream = try await ModelManager.shared.streamingInfer(
             with: modelID,

@@ -60,10 +60,10 @@ enum ShortcutUtilities {
             }
         }
 
-        if trimmedMessage.isEmpty {
-            return String(localized: "FlowDown launched to start a new conversation.")
-        } else {
+        if launched {
             return String(localized: "FlowDown launched with your message.")
+        } else {
+            throw ShortcutUtilitiesError.failedToLaunchApplication
         }
     }
 

@@ -316,6 +316,15 @@ class MainController: UIViewController {
         }
         Logger.app.debugFile("current conversation ID: \(currentConversationID)")
 
+        guard sdb.conversationWith(identifier: currentConversationID) != nil else {
+            Logger.app.errorFile("conversation missing from database: id \(currentConversationID)")
+            showErrorAlert(
+                title: "Conversation Missing",
+                message: "The selected conversation could not be found. Please choose another conversation or create a new one."
+            )
+            return
+        }
+
         // retrieve session
         let session = ConversationSessionManager.shared.session(for: currentConversationID)
         Logger.app.debugFile("session created/retrieved for conversation")
@@ -325,10 +334,7 @@ class MainController: UIViewController {
             Logger.app.errorFile("no default model configured")
             showErrorAlert(
                 title: "No Model Available",
-                message: String(
-                    localized:
-                    "Please add some models to use. You can choose to download models, or use cloud model from well known service providers."
-                )
+                message: "Please add some models to use. You can choose to download models, or use cloud model from well known service providers."
             ) {
                 let setting = SettingController()
                 SettingController.setNextEntryPage(.modelManagement)
@@ -363,11 +369,15 @@ class MainController: UIViewController {
         }
     }
 
-    private func showErrorAlert(title: String, message: String, completion: @escaping () -> Void = {}) {
+    private func showErrorAlert(
+        title: String.LocalizationValue,
+        message: String.LocalizationValue,
+        completion: @escaping () -> Void = {}
+    ) {
         DispatchQueue.main.async {
             let alert = AlertViewController(
-                title: "\(title)",
-                message: "\(message)"
+                title: title,
+                message: message
             ) { context in
                 context.addAction(title: "OK") {
                     context.dispose(completion)

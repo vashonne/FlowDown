@@ -2796,6 +2796,22 @@
         }
       }
     },
+    "Conversation Missing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversation Missing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "对话丢失"
+          }
+        }
+      }
+    },
     "Conversation: %@" : {
       "localizations" : {
         "en" : {
@@ -12860,6 +12876,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "获取更新的请求已发送。根据数据量的大小，可能需要一些时间才能完成。"
+          }
+        }
+      }
+    },
+    "The selected conversation could not be found. Please choose another conversation or create a new one." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected conversation could not be found. Please choose another conversation or create a new one."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未能找到选中的对话，请选择其他对话或创建新对话。"
           }
         }
       }

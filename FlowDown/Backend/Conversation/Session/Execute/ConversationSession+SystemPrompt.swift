@@ -75,7 +75,7 @@ extension ConversationSession {
                     • Personal details: "User is a software engineer", "User prefers dark mode"
                     • Project context: "Working on iOS app called FlowDown", "Using Swift and UIKit"
                     • Preferences: "User likes detailed explanations", "User prefers concise responses"
-                    • Goals: "Learning SwiftUI", "Building a chat application"
+                    • Goals: "Learning Swift", "Building a chat application"
                     • Important facts: "User's timezone is PST", "User works remotely"
 
                     FORMAT: Store memories in third person format (e.g., "User is a student" not "I'm a student")

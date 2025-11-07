@@ -2030,10 +2030,10 @@
         }
       }
     },
-    "Classify the provided content as one of ${candidates}" : {
+    "Classify the provided content using the candidate list" : {
 
     },
-    "Classify the selected image" : {
+    "Classify the provided image using the candidate list" : {
 
     },
     "Clean Cache" : {
@@ -6013,6 +6013,12 @@
         }
       }
     },
+    "Generate Model Response" : {
+
+    },
+    "Generate Model Response with Image" : {
+
+    },
     "Generate New Icon" : {
       "localizations" : {
         "en" : {
@@ -6385,6 +6391,9 @@
           }
         }
       }
+    },
+    "If you are unsure, use '%@' for VALUE." : {
+
     },
     "If you encounter any issues, you can try to reset the app. This will remove all content and reset the entire database." : {
       "localizations" : {
@@ -10023,6 +10032,7 @@
       }
     },
     "Quick Reply" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10055,6 +10065,7 @@
       }
     },
     "Quick Reply with Image" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10457,7 +10468,11 @@
         }
       }
     },
+    "Respond only with XML formatted as <classification><label>VALUE</label></classification>, replacing VALUE with a label from the candidate list." : {
+
+    },
     "Respond with exactly one candidate string from the list above. If you are unsure, respond with '%@'." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11015,6 +11030,9 @@
           }
         }
       }
+    },
+    "Select exactly one label from the candidate list." : {
+
     },
     "Select from Existing" : {
       "localizations" : {

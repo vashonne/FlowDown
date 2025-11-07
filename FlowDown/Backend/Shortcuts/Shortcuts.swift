@@ -6,7 +6,7 @@ struct Shortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         var shortcuts: [AppShortcut] = [
             AppShortcut(
-                intent: QuickResponseIntent(),
+                intent: GenerateResponseIntent(),
                 phrases: [
                     "Ask Model on \(.applicationName)",
                 ],

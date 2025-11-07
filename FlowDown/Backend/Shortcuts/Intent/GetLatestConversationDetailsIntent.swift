@@ -1,7 +1,7 @@
 import AppIntents
 import Foundation
 
-struct FetchLastConversationDetailsIntent: AppIntent {
+struct GetLatestConversationDetailsIntent: AppIntent {
     static var title: LocalizedStringResource {
         "Fetch Last Conversation"
     }

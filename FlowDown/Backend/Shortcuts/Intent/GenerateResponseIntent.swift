@@ -4,9 +4,9 @@ import Foundation
 import UIKit
 import UniformTypeIdentifiers
 
-struct QuickResponseIntent: AppIntent {
+struct GenerateResponseIntent: AppIntent {
     static var title: LocalizedStringResource {
-        "Quick Reply"
+        "Generate Model Response"
     }
 
     static var description: IntentDescription {
@@ -62,7 +62,7 @@ struct QuickResponseIntent: AppIntent {
 @available(iOS 18.0, macCatalyst 18.0, *)
 struct GenerateChatResponseWithImagesIntent: AppIntent {
     static var title: LocalizedStringResource {
-        "Quick Reply with Image"
+        "Generate Model Response with Image"
     }
 
     static var description: IntentDescription {

@@ -10,9 +10,6 @@ struct ClassifyContentIntent: AppIntent {
         "Use the model to classify content into one of the provided candidates. If the model cannot decide, the first candidate is returned."
     }
 
-    @Parameter(title: "Prompt")
-    var prompt: String
-
     @Parameter(title: "Content", requestValueDialog: "What content should be classified?")
     var content: String
 
@@ -20,8 +17,7 @@ struct ClassifyContentIntent: AppIntent {
     var candidates: [String]
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify the provided content as one of \(\.$candidates)") {
-            \.$prompt
+        Summary("Classify the provided content using the candidate list") {
             \.$content
             \.$candidates
         }
@@ -29,7 +25,6 @@ struct ClassifyContentIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
         let request = try ClassificationPromptBuilder.make(
-            prompt: prompt,
             content: content,
             candidates: candidates,
             requireContent: true,
@@ -59,9 +54,6 @@ struct ClassifyContentWithImageIntent: AppIntent {
         "Use the model to classify content with the help of an accompanying image. If the model cannot decide, the first candidate is returned."
     }
 
-    @Parameter(title: "Prompt")
-    var prompt: String
-
     @Parameter(title: "Content", default: "", requestValueDialog: "Add any additional details for the classification.")
     var content: String
 
@@ -72,8 +64,7 @@ struct ClassifyContentWithImageIntent: AppIntent {
     var candidates: [String]
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify the selected image") {
-            \.$prompt
+        Summary("Classify the provided image using the candidate list") {
             \.$content
             \.$image
             \.$candidates
@@ -82,7 +73,6 @@ struct ClassifyContentWithImageIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
         let request = try ClassificationPromptBuilder.make(
-            prompt: prompt,
             content: content,
             candidates: candidates,
             requireContent: false,
@@ -109,6 +99,15 @@ private enum ClassificationPromptBuilder {
         let primaryCandidate: String
 
         func resolveCandidate(from response: String) -> String {
+            if let label = response.extractXMLLabelValue() {
+                let normalizedLabel = label.trimmingCharacters(in: .whitespacesAndNewlines)
+                if let matchedCandidate = sanitizedCandidates.first(where: {
+                    $0.compare(normalizedLabel, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+                }) {
+                    return matchedCandidate
+                }
+            }
+
             let normalized = response
                 .components(separatedBy: .newlines)
                 .first?
@@ -122,7 +121,6 @@ private enum ClassificationPromptBuilder {
     }
 
     static func make(
-        prompt: String,
         content: String,
         candidates: [String],
         requireContent: Bool,
@@ -155,12 +153,18 @@ private enum ClassificationPromptBuilder {
             localized: "An image is provided with this request. Consider the visual details when selecting the candidate."
         )
 
-        let outputInstructionFormat = String(
-            localized: "Respond with exactly one candidate string from the list above. If you are unsure, respond with '%@'."
+        let candidateUsageInstruction = String(
+            localized: "Select exactly one label from the candidate list."
         )
-        let outputInstruction = String(format: outputInstructionFormat, primaryCandidate)
 
-        let trimmedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        let xmlOutputInstruction = String(
+            localized: "Respond only with XML formatted as <classification><label>VALUE</label></classification>, replacing VALUE with a label from the candidate list."
+        )
+
+        let fallbackInstructionFormat = String(
+            localized: "If you are unsure, use '%@' for VALUE."
+        )
+        let fallbackInstruction = String(format: fallbackInstructionFormat, primaryCandidate)
 
         var instructionSegments: [String] = [baseInstruction]
 
@@ -168,9 +172,7 @@ private enum ClassificationPromptBuilder {
             instructionSegments.append(imageInstruction)
         }
 
-        if !trimmedPrompt.isEmpty {
-            instructionSegments.append(trimmedPrompt)
-        }
+        instructionSegments.append(candidateUsageInstruction)
 
         instructionSegments.append(String(localized: "Candidates:"))
         instructionSegments.append(candidateList)
@@ -180,7 +182,8 @@ private enum ClassificationPromptBuilder {
             instructionSegments.append(trimmedContent)
         }
 
-        instructionSegments.append(outputInstruction)
+        instructionSegments.append(xmlOutputInstruction)
+        instructionSegments.append(fallbackInstruction)
 
         let message = instructionSegments.joined(separator: "\n\n")
 
@@ -189,5 +192,21 @@ private enum ClassificationPromptBuilder {
             sanitizedCandidates: sanitizedCandidates,
             primaryCandidate: primaryCandidate
         )
+    }
+}
+
+private extension String {
+    func extractXMLLabelValue() -> String? {
+        guard let labelStart = range(of: "<label>") else {
+            return nil
+        }
+
+        let searchRange = labelStart.upperBound ..< endIndex
+        guard let labelEnd = range(of: "</label>", range: searchRange) else {
+            return nil
+        }
+
+        let valueRange = labelStart.upperBound ..< labelEnd.lowerBound
+        return String(self[valueRange])
     }
 }

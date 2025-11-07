@@ -18,9 +18,15 @@ struct ImproveWritingMoreProfessionalIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Rewrite \(\.$text) in a professional tone using \(\.$model)")
+            Summary("Rewrite the text with a professional tone") {
+                \.$model
+                \.$text
+            }
         } otherwise: {
-            Summary("Rewrite \(\.$text) in a professional tone with the default model")
+            Summary("Rewrite the text professionally using the default model") {
+                \.$model
+                \.$text
+            }
         }
     }
 
@@ -60,9 +66,15 @@ struct ImproveWritingMoreFriendlyIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Rewrite \(\.$text) in a friendly tone using \(\.$model)")
+            Summary("Rewrite the text with a friendly tone") {
+                \.$model
+                \.$text
+            }
         } otherwise: {
-            Summary("Rewrite \(\.$text) in a friendly tone with the default model")
+            Summary("Rewrite the text in a friendly tone using the default model") {
+                \.$model
+                \.$text
+            }
         }
     }
 
@@ -102,9 +114,15 @@ struct ImproveWritingMoreConciseIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Rewrite \(\.$text) to be concise using \(\.$model)")
+            Summary("Make the text more concise") {
+                \.$model
+                \.$text
+            }
         } otherwise: {
-            Summary("Rewrite \(\.$text) to be concise with the default model")
+            Summary("Make the text concise using the default model") {
+                \.$model
+                \.$text
+            }
         }
     }
 

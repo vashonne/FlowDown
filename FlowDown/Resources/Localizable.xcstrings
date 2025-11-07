@@ -1290,18 +1290,6 @@
         }
       }
     },
-    "Ask ${message} using ${model} and optional image ${image}." : {
-
-    },
-    "Ask ${message} using the default model and an optional image ${image}." : {
-
-    },
-    "Ask ${message} with ${model}." : {
-
-    },
-    "Ask ${message} with the default model." : {
-
-    },
     "Ask Model" : {
       "localizations" : {
         "en" : {
@@ -1526,6 +1514,9 @@
           }
         }
       }
+    },
+    "Browse recent conversations" : {
+
     },
     "Browse, search, and manage stored memories." : {
       "localizations" : {
@@ -2007,12 +1998,6 @@
         }
       }
     },
-    "Classify ${content} with prompt ${prompt} choosing from ${candidates}" : {
-
-    },
-    "Classify ${image} with prompt ${prompt}, additional details ${content}, choosing from ${candidates}" : {
-
-    },
     "Classify Content" : {
       "localizations" : {
         "en" : {
@@ -2044,6 +2029,12 @@
           }
         }
       }
+    },
+    "Classify the provided content as one of ${candidates}" : {
+
+    },
+    "Classify the selected image" : {
+
     },
     "Clean Cache" : {
       "localizations" : {
@@ -2975,6 +2966,12 @@
         }
       }
     },
+    "Create a blank conversation link" : {
+
+    },
+    "Create a conversation link with a preset message" : {
+
+    },
     "Create a duplicate of this template for further editing." : {
       "localizations" : {
         "en" : {
@@ -3038,12 +3035,6 @@
           }
         }
       }
-    },
-    "Create conversation link prefilled with ${message}" : {
-
-    },
-    "Create conversation link without an initial message" : {
-
     },
     "Create Copy" : {
       "localizations" : {
@@ -5711,6 +5702,7 @@
       }
     },
     "Fetch latest conversation details" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5725,6 +5717,9 @@
           }
         }
       }
+    },
+    "Fetch the latest conversation details" : {
+
     },
     "Fetch Updates Now" : {
       "localizations" : {
@@ -7369,6 +7364,12 @@
         }
       }
     },
+    "List the key points from the text" : {
+
+    },
+    "List the key points using the default model" : {
+
+    },
     "Local" : {
       "localizations" : {
         "en" : {
@@ -7642,6 +7643,12 @@
           }
         }
       }
+    },
+    "Make the text concise using the default model" : {
+
+    },
+    "Make the text more concise" : {
+
     },
     "Manage AI memory tools and stored conversation memories." : {
       "localizations" : {
@@ -10562,24 +10569,6 @@
         }
       }
     },
-    "Rewrite ${text} in a friendly tone using ${model}" : {
-
-    },
-    "Rewrite ${text} in a friendly tone with the default model" : {
-
-    },
-    "Rewrite ${text} in a professional tone using ${model}" : {
-
-    },
-    "Rewrite ${text} in a professional tone with the default model" : {
-
-    },
-    "Rewrite ${text} to be concise using ${model}" : {
-
-    },
-    "Rewrite ${text} to be concise with the default model" : {
-
-    },
     "Rewrite text in a more professional tone while preserving meaning." : {
       "localizations" : {
         "en" : {
@@ -10659,6 +10648,18 @@
           }
         }
       }
+    },
+    "Rewrite the text in a friendly tone using the default model" : {
+
+    },
+    "Rewrite the text professionally using the default model" : {
+
+    },
+    "Rewrite the text with a friendly tone" : {
+
+    },
+    "Rewrite the text with a professional tone" : {
+
     },
     "Rewriting Message" : {
       "localizations" : {
@@ -10900,6 +10901,9 @@
         }
       }
     },
+    "Search saved conversations by keyword" : {
+
+    },
     "Search saved conversations by keyword and return formatted summaries." : {
       "localizations" : {
         "en" : {
@@ -10931,12 +10935,6 @@
           }
         }
       }
-    },
-    "Search the latest ${resultLimit} conversations" : {
-
-    },
-    "Search up to ${resultLimit} conversations matching ${keyword}" : {
-
     },
     "Search…" : {
       "localizations" : {
@@ -11066,23 +11064,6 @@
         }
       }
     },
-    "Send a message with an image and get the model's response." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send a message with an image and get the model's response."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发送带图像的消息并获取模型的回复。"
-          }
-        }
-      }
-    },
     "Send us an email." : {
       "localizations" : {
         "en" : {
@@ -11098,6 +11079,18 @@
           }
         }
       }
+    },
+    "Send your message with the default model" : {
+
+    },
+    "Send your message with the default model and optional image" : {
+
+    },
+    "Send your message with the selected model" : {
+
+    },
+    "Send your message with the selected model and optional image" : {
+
     },
     "Sending Hello..." : {
       "localizations" : {
@@ -11195,7 +11188,7 @@
         }
       }
     },
-    "Set the default conversation model to ${model}" : {
+    "Set the default conversation model" : {
 
     },
     "Set the strategy for handling runtime resource cache. Allowing the use of cache can speed up inference and save energy, but may cause the software to close unexpectedly." : {
@@ -11729,18 +11722,6 @@
         }
       }
     },
-    "Summarize ${text} as a list using ${model}" : {
-
-    },
-    "Summarize ${text} as a list with the default model" : {
-
-    },
-    "Summarize ${text} using ${model}" : {
-
-    },
-    "Summarize ${text} with the default model" : {
-
-    },
     "Summarize content into a list of key points." : {
       "localizations" : {
         "en" : {
@@ -11836,6 +11817,12 @@
           }
         }
       }
+    },
+    "Summarize the provided text" : {
+
+    },
+    "Summarize the provided text with the default model" : {
+
     },
     "Support" : {
       "localizations" : {

@@ -15,9 +15,13 @@ struct GenerateNewConversationLinkIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$message, .hasAnyValue) {
-            Summary("Create conversation link prefilled with \(\.$message)")
+            Summary("Create a conversation link with a preset message") {
+                \.$message
+            }
         } otherwise: {
-            Summary("Create conversation link without an initial message")
+            Summary("Create a blank conversation link") {
+                \.$message
+            }
         }
     }
 

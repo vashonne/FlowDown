@@ -27,12 +27,16 @@ struct QuickResponseIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Ask \(\.$message) with \(\.$model).") {
+            Summary("Send your message with the selected model") {
+                \.$model
+                \.$message
                 \.$saveToConversation
                 \.$enableMemory
             }
         } otherwise: {
-            Summary("Ask \(\.$message) with the default model.") {
+            Summary("Send your message with the default model") {
+                \.$model
+                \.$message
                 \.$saveToConversation
                 \.$enableMemory
             }
@@ -82,12 +86,18 @@ struct GenerateChatResponseWithImagesIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Ask \(\.$message) using \(\.$model) and optional image \(\.$image).") {
+            Summary("Send your message with the selected model and optional image") {
+                \.$model
+                \.$message
+                \.$image
                 \.$saveToConversation
                 \.$enableMemory
             }
         } otherwise: {
-            Summary("Ask \(\.$message) using the default model and an optional image \(\.$image).") {
+            Summary("Send your message with the default model and optional image") {
+                \.$model
+                \.$message
+                \.$image
                 \.$saveToConversation
                 \.$enableMemory
             }

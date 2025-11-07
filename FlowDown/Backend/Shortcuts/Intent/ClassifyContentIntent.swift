@@ -20,7 +20,11 @@ struct ClassifyContentIntent: AppIntent {
     var candidates: [String]
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify \(\.$content) with prompt \(\.$prompt) choosing from \(\.$candidates)")
+        Summary("Classify the provided content as one of \(\.$candidates)") {
+            \.$prompt
+            \.$content
+            \.$candidates
+        }
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
@@ -68,7 +72,12 @@ struct ClassifyContentWithImageIntent: AppIntent {
     var candidates: [String]
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify \(\.$image) with prompt \(\.$prompt), additional details \(\.$content), choosing from \(\.$candidates)")
+        Summary("Classify the selected image") {
+            \.$prompt
+            \.$content
+            \.$image
+            \.$candidates
+        }
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {

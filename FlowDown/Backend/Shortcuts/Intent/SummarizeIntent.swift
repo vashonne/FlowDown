@@ -18,9 +18,15 @@ struct SummarizeTextIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Summarize \(\.$text) using \(\.$model)")
+            Summary("Summarize the provided text") {
+                \.$model
+                \.$text
+            }
         } otherwise: {
-            Summary("Summarize \(\.$text) with the default model")
+            Summary("Summarize the provided text with the default model") {
+                \.$model
+                \.$text
+            }
         }
     }
 
@@ -54,9 +60,15 @@ struct SummarizeTextUsingListIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Summarize \(\.$text) as a list using \(\.$model)")
+            Summary("List the key points from the text") {
+                \.$model
+                \.$text
+            }
         } otherwise: {
-            Summary("Summarize \(\.$text) as a list with the default model")
+            Summary("List the key points using the default model") {
+                \.$model
+                \.$text
+            }
         }
     }
 

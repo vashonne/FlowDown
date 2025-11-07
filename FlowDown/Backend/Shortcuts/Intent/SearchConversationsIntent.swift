@@ -23,9 +23,15 @@ struct SearchConversationsIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$keyword, .hasAnyValue) {
-            Summary("Search up to \(\.$resultLimit) conversations matching \(\.$keyword)")
+            Summary("Search saved conversations by keyword") {
+                \.$keyword
+                \.$resultLimit
+            }
         } otherwise: {
-            Summary("Search the latest \(\.$resultLimit) conversations")
+            Summary("Browse recent conversations") {
+                \.$keyword
+                \.$resultLimit
+            }
         }
     }
 

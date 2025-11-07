@@ -15,7 +15,7 @@ struct FetchLastConversationDetailsIntent: AppIntent {
     }
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Fetch latest conversation details")
+        Summary("Fetch the latest conversation details")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {

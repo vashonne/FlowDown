@@ -7,6 +7,7 @@
 
 import AppIntents
 import ChatClientKit
+import ConfigurableKit
 import Foundation
 import RichEditor
 import Storage
@@ -36,6 +37,8 @@ enum InferenceIntentHandler {
         image: IntentFile?,
         options: Options
     ) async throws -> String {
+        bootstrapEnvironment()
+
         let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
         let hasImage = image != nil
 
@@ -230,7 +233,9 @@ enum InferenceIntentHandler {
         reasoning: String
     ) {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMdd-HHmm"
+        formatter.locale = .current
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         let suffix = formatter.string(from: Date())
 
         let titleFormat = String(
@@ -253,6 +258,7 @@ enum InferenceIntentHandler {
         let userContent = userMessage.isEmpty
             ? String(localized: "Attachment shared via Shortcut.")
             : userMessage
+        let collapseAfterReasoningComplete = ModelManager.shared.collapseReasoningSectionWhenComplete
 
         let userMessageObject = session.appendNewMessage(role: .user) {
             $0.update(\.document, to: userContent)
@@ -266,6 +272,9 @@ enum InferenceIntentHandler {
             $0.update(\.document, to: response)
             if !reasoning.isEmpty {
                 $0.update(\.reasoningContent, to: reasoning)
+                if collapseAfterReasoningComplete {
+                    $0.update(\.isThinkingFold, to: true)
+                }
             }
         }
 
@@ -315,6 +324,14 @@ enum InferenceIntentHandler {
                 Logger.model.errorFile("Memory tool \(tool.functionName) failed: \(error.localizedDescription)")
             }
         }
+    }
+
+    private static let environmentBootstrap: Void = {
+        ConfigurableKit.storage = UserDefaultKeyValueStorage(suite: .standard, prefix: "in-house.")
+    }()
+
+    private static func bootstrapEnvironment() {
+        _ = environmentBootstrap
     }
 }
 

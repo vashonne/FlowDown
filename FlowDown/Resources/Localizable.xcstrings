@@ -1739,6 +1739,22 @@
         }
       }
     },
+    "Candidates (Text Input)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Candidates (Text Input)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "候选项（文本输入）"
+          }
+        }
+      }
+    },
     "Candidates:" : {
       "localizations" : {
         "en" : {
@@ -6114,7 +6130,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "生成模型回复"
+            "value" : "生成回复"
           }
         }
       }
@@ -10180,6 +10196,22 @@
         }
       }
     },
+    "Provide candidate labels separated by new lines or commas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provide candidate labels separated by new lines or commas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请使用换行或逗号分隔候选标签。"
+          }
+        }
+      }
+    },
     "Provide the candidate labels." : {
       "localizations" : {
         "en" : {
@@ -11330,7 +11362,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用默认模型发送你的消息"
+            "value" : "使用默认模型发送消息"
           }
         }
       }
@@ -11346,7 +11378,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用默认模型并可选图像发送你的消息"
+            "value" : "使用默认模型发送消息，可选择附加图像"
           }
         }
       }
@@ -11362,7 +11394,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用所选模型发送你的消息"
+            "value" : "使用所选模型发送消息"
           }
         }
       }
@@ -11378,7 +11410,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用所选模型并可选图像发送你的消息"
+            "value" : "使用所选模型发送消息，可选择附加图像"
           }
         }
       }
@@ -14515,6 +14547,38 @@
         }
       }
     },
+    "Use the default model to classify the image" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the default model to classify the image"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用默认模型对图像进行分类"
+          }
+        }
+      }
+    },
+    "Use the default model to classify your content" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the default model to classify your content"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用默认模型对内容进行分类"
+          }
+        }
+      }
+    },
     "Use the model to classify content into one of the provided candidates. If the model cannot decide, the first candidate is returned." : {
       "localizations" : {
         "en" : {
@@ -14559,6 +14623,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "稍后请使用打开 URL 快捷步骤来启动软件并开始对话。"
+          }
+        }
+      }
+    },
+    "Use the selected model to classify the image" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the selected model to classify the image"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用所选模型对图像进行分类"
+          }
+        }
+      }
+    },
+    "Use the selected model to classify your content" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use the selected model to classify your content"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用所选模型对内容进行分类"
           }
         }
       }
@@ -15552,6 +15648,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你希望选择哪个模型作为默认？"
+          }
+        }
+      }
+    },
+    "Which model should perform the classification?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which model should perform the classification?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应该由哪个模型来执行分类？"
           }
         }
       }

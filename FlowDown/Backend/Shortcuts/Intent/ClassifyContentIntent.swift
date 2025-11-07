@@ -10,29 +10,55 @@ struct ClassifyContentIntent: AppIntent {
         "Use the model to classify content into one of the provided candidates. If the model cannot decide, the first candidate is returned."
     }
 
+    @Parameter(title: "Model", default: nil, requestValueDialog: "Which model should perform the classification?")
+    var model: ShortcutsEntities.ModelEntity?
+
     @Parameter(title: "Content", requestValueDialog: "What content should be classified?")
     var content: String
 
-    @Parameter(title: "Candidates", requestValueDialog: "Provide the candidate labels.")
+    @Parameter(title: "Candidates", default: [], requestValueDialog: "Provide the candidate labels.")
     var candidates: [String]
 
+    @Parameter(title: "Candidates (Text Input)", default: nil, requestValueDialog: "Provide candidate labels separated by new lines or commas.")
+    var candidateTextInput: String?
+
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify the provided content using the candidate list") {
-            \.$content
-            \.$candidates
+        When(\.$model, .hasAnyValue) {
+            Summary("Use the selected model to classify your content") {
+                \.$model
+                \.$content
+                \.$candidates
+                \.$candidateTextInput
+            }
+        } otherwise: {
+            Summary("Use the default model to classify your content") {
+                \.$model
+                \.$content
+                \.$candidates
+                \.$candidateTextInput
+            }
         }
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
+        let trimmedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedContent.isEmpty else {
+            throw ShortcutError.emptyMessage
+        }
+
+        let resolvedCandidates = try CandidateInputResolver.resolveCandidates(
+            manualCandidates: candidates,
+            scriptInput: candidateTextInput
+        )
+
         let request = try ClassificationPromptBuilder.make(
-            content: content,
-            candidates: candidates,
-            requireContent: true,
+            content: trimmedContent,
+            candidates: resolvedCandidates,
             includeImageInstruction: false
         )
 
         let response = try await InferenceIntentHandler.execute(
-            model: nil,
+            model: model,
             message: request.message,
             image: nil,
             options: .init(allowsImages: false)
@@ -54,33 +80,50 @@ struct ClassifyContentWithImageIntent: AppIntent {
         "Use the model to classify content with the help of an accompanying image. If the model cannot decide, the first candidate is returned."
     }
 
-    @Parameter(title: "Content", default: "", requestValueDialog: "Add any additional details for the classification.")
-    var content: String
+    @Parameter(title: "Model", default: nil, requestValueDialog: "Which model should perform the classification?")
+    var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(title: "Image", supportedContentTypes: [.image], requestValueDialog: "Select an image to accompany the request.")
     var image: IntentFile
 
-    @Parameter(title: "Candidates", requestValueDialog: "Provide the candidate labels.")
+    @Parameter(title: "Candidates", default: [], requestValueDialog: "Provide the candidate labels.")
     var candidates: [String]
 
+    @Parameter(title: "Candidates (Text Input)", default: nil, requestValueDialog: "Provide candidate labels separated by new lines or commas.")
+    var candidateTextInput: String?
+
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify the provided image using the candidate list") {
-            \.$content
-            \.$image
-            \.$candidates
+        When(\.$model, .hasAnyValue) {
+            Summary("Use the selected model to classify the image") {
+                \.$model
+                \.$image
+                \.$candidates
+                \.$candidateTextInput
+            }
+        } otherwise: {
+            Summary("Use the default model to classify the image") {
+                \.$model
+                \.$image
+                \.$candidates
+                \.$candidateTextInput
+            }
         }
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
+        let resolvedCandidates = try CandidateInputResolver.resolveCandidates(
+            manualCandidates: candidates,
+            scriptInput: candidateTextInput
+        )
+
         let request = try ClassificationPromptBuilder.make(
-            content: content,
-            candidates: candidates,
-            requireContent: false,
+            content: nil,
+            candidates: resolvedCandidates,
             includeImageInstruction: true
         )
 
         let response = try await InferenceIntentHandler.execute(
-            model: nil,
+            model: model,
             message: request.message,
             image: image,
             options: .init(allowsImages: true)
@@ -121,15 +164,11 @@ private enum ClassificationPromptBuilder {
     }
 
     static func make(
-        content: String,
+        content: String?,
         candidates: [String],
-        requireContent: Bool,
         includeImageInstruction: Bool
     ) throws -> Request {
-        let trimmedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
-        if requireContent, trimmedContent.isEmpty {
-            throw ShortcutError.emptyMessage
-        }
+        let trimmedContent = content?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         let sanitizedCandidates = candidates
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -192,6 +231,84 @@ private enum ClassificationPromptBuilder {
             sanitizedCandidates: sanitizedCandidates,
             primaryCandidate: primaryCandidate
         )
+    }
+}
+
+private enum CandidateInputResolver {
+    static func resolveCandidates(
+        manualCandidates: [String],
+        scriptInput: String?
+    ) throws -> [String] {
+        var ordered: [String] = []
+        var seen: Set<String> = []
+
+        func append(_ candidate: String) {
+            let trimmed = candidate.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { return }
+            let normalized = trimmed.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+            guard seen.insert(normalized).inserted else { return }
+            ordered.append(trimmed)
+        }
+
+        manualCandidates.forEach(append)
+
+        if let scriptInput,
+           !scriptInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
+            parseScriptCandidates(from: scriptInput).forEach(append)
+        }
+
+        guard !ordered.isEmpty else {
+            throw ShortcutError.invalidCandidates
+        }
+
+        return ordered
+    }
+
+    private static func parseScriptCandidates(from text: String) -> [String] {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return [] }
+
+        if let data = trimmed.data(using: .utf8) {
+            if let array = try? JSONSerialization.jsonObject(with: data) as? [Any] {
+                return array.compactMap { value in
+                    switch value {
+                    case let string as String:
+                        string
+                    case let number as NSNumber:
+                        number.stringValue
+                    default:
+                        nil
+                    }
+                }
+            }
+
+            if let dictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                let sortedEntries = dictionary.sorted { lhs, rhs in
+                    lhs.key.localizedCaseInsensitiveCompare(rhs.key) == .orderedAscending
+                }
+
+                let values = sortedEntries.compactMap { _, value -> String? in
+                    switch value {
+                    case let string as String:
+                        string
+                    case let number as NSNumber:
+                        number.stringValue
+                    default:
+                        nil
+                    }
+                }
+
+                if !values.isEmpty {
+                    return values
+                }
+
+                return sortedEntries.map(\.key)
+            }
+        }
+
+        let separators = CharacterSet(charactersIn: ",;\n")
+        return trimmed.components(separatedBy: separators)
     }
 }
 

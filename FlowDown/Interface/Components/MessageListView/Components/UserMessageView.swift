@@ -32,12 +32,22 @@ final class UserMessageView: MessageListRowView {
         }
     }
 
+    private let backgroundGradientLayer = CAGradientLayer()
     private lazy var textView: LTXLabel = .init().with { $0.isSelectable = true }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        contentView.backgroundColor = .accent.withAlphaComponent(0.05)
+        let accentColor = UIColor.accent
+        backgroundGradientLayer.colors = [
+            accentColor.withAlphaComponent(0.10).cgColor,
+            accentColor.withAlphaComponent(0.15).cgColor,
+        ]
+        backgroundGradientLayer.startPoint = .init(x: 0.6, y: 0)
+        backgroundGradientLayer.endPoint = .init(x: 0.4, y: 1)
+        contentView.layer.insertSublayer(backgroundGradientLayer, at: 0)
+
+        contentView.backgroundColor = .clear
         contentView.layer.cornerRadius = 12
         contentView.layer.cornerCurve = .continuous
         contentView.clipsToBounds = true
@@ -69,6 +79,8 @@ final class UserMessageView: MessageListRowView {
             width: contentWidth,
             height: bounds.height - insets.bottom
         )
+        backgroundGradientLayer.frame = contentView.bounds
+        backgroundGradientLayer.cornerRadius = contentView.layer.cornerRadius
         textView.frame = contentView.bounds.insetBy(dx: Self.textPadding, dy: Self.textPadding)
     }
 

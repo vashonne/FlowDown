@@ -28,6 +28,7 @@ final class ToolHintView: MessageListRowView {
 
     var clickHandler: (() -> Void)?
 
+    private let backgroundGradientLayer = CAGradientLayer()
     private let label: UILabel = .init().with {
         $0.font = UIFont.preferredFont(forTextStyle: .body)
         $0.textColor = .label
@@ -52,14 +53,22 @@ final class ToolHintView: MessageListRowView {
         decoratedView.contentMode = .scaleAspectFit
         decoratedView.tintColor = .label
 
+        backgroundGradientLayer.startPoint = .init(x: 0.6, y: 0)
+        backgroundGradientLayer.endPoint = .init(x: 0.4, y: 1)
+
+        contentView.backgroundColor = .clear
         contentView.layer.cornerRadius = 12
         contentView.layer.cornerCurve = .continuous
+//        contentView.clipsToBounds = true
+        contentView.layer.insertSublayer(backgroundGradientLayer, at: 0)
         contentView.addSubview(decoratedView)
         contentView.addSubview(symbolView)
         contentView.addSubview(label)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         contentView.addGestureRecognizer(tapGesture)
+
+        updateStateImage()
     }
 
     override func layoutSubviews() {
@@ -83,6 +92,8 @@ final class ToolHintView: MessageListRowView {
 
         contentView.frame.size.width = label.frame.maxX + 18
         decoratedView.frame = .init(x: contentView.bounds.width - 12, y: -4, width: 16, height: 16)
+        backgroundGradientLayer.frame = contentView.bounds
+        backgroundGradientLayer.cornerRadius = contentView.layer.cornerRadius
     }
 
     override func themeDidUpdate() {
@@ -94,17 +105,26 @@ final class ToolHintView: MessageListRowView {
         let configuration = UIImage.SymbolConfiguration(scale: .small)
         switch state {
         case .suceeded:
-            contentView.backgroundColor = .systemGreen.withAlphaComponent(0.05)
+            backgroundGradientLayer.colors = [
+                UIColor.systemGreen.withAlphaComponent(0.08).cgColor,
+                UIColor.systemGreen.withAlphaComponent(0.12).cgColor,
+            ]
             let image = UIImage(systemName: "checkmark.seal", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemGreen
         case .running:
-            contentView.backgroundColor = .systemBlue.withAlphaComponent(0.05)
+            backgroundGradientLayer.colors = [
+                UIColor.systemBlue.withAlphaComponent(0.08).cgColor,
+                UIColor.systemBlue.withAlphaComponent(0.12).cgColor,
+            ]
             let image = UIImage(systemName: "hourglass", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemBlue
         default:
-            contentView.backgroundColor = .systemRed.withAlphaComponent(0.05)
+            backgroundGradientLayer.colors = [
+                UIColor.systemRed.withAlphaComponent(0.08).cgColor,
+                UIColor.systemRed.withAlphaComponent(0.12).cgColor,
+            ]
             let image = UIImage(systemName: "xmark.seal", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemRed

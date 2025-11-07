@@ -47,7 +47,7 @@ extension ConversationSelectionView {
             separatorInset = .zero
 
             let selectionColor = UIView().with {
-                $0.backgroundColor = .accent.withAlphaComponent(0.1)
+                $0.backgroundColor = .accent.withAlphaComponent(0.15)
                 $0.layer.cornerRadius = 12
             }
             selectedBackgroundView = selectionColor

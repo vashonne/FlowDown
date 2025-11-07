@@ -19,13 +19,13 @@ struct ClassifyContentIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Content"),
-        requestValueDialog: IntentDialog("What content should be classified?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What content should be classified?"))
     )
     var content: String
 
     @Parameter(
         title: LocalizedStringResource("Candidates"),
-        requestValueDialog: IntentDialog("Provide the candidate labels.")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Provide the candidate labels."))
     )
     var candidates: [String]
 
@@ -75,27 +75,25 @@ struct ClassifyContentWithImageIntent: AppIntent {
     @Parameter(
         title: LocalizedStringResource("Content"),
         default: "",
-        requestValueDialog: IntentDialog("Add any additional details for the classification.")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Add any additional details for the classification."))
     )
     var content: String
 
     @Parameter(
         title: LocalizedStringResource("Image"),
         supportedContentTypes: [.image],
-        requestValueDialog: IntentDialog("Select an image to accompany the request.")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Select an image to accompany the request."))
     )
     var image: IntentFile
 
     @Parameter(
         title: LocalizedStringResource("Candidates"),
-        requestValueDialog: IntentDialog("Provide the candidate labels.")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Provide the candidate labels."))
     )
     var candidates: [String]
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Classify \(\.$image)") {
-            \.$content
-        }
+        Summary("Classify \(\.$image)")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {

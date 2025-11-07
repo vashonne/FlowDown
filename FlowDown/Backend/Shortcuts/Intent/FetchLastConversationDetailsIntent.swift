@@ -12,6 +12,10 @@ struct FetchLastConversationDetailsIntent: AppIntent {
         )
     )
 
+    static var authenticationPolicy: IntentAuthenticationPolicy {
+        .requiresAuthentication
+    }
+
     static var parameterSummary: some ParameterSummary {
         Summary("Fetch latest conversation details")
     }

@@ -13,6 +13,10 @@ struct SearchConversationsIntent: AppIntent {
         )
     )
 
+    static var authenticationPolicy: IntentAuthenticationPolicy {
+        .requiresAuthentication
+    }
+
     @Parameter(
         title: LocalizedStringResource("Keyword"),
         default: nil
@@ -22,15 +26,12 @@ struct SearchConversationsIntent: AppIntent {
     @Parameter(
         title: LocalizedStringResource("Result Limit"),
         default: 5,
-        requestValueDialog: IntentDialog("How many results should FlowDown return?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("How many results should FlowDown return?"))
     )
     var resultLimit: Int
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Search conversations") {
-            \.$keyword
-            \.$resultLimit
-        }
+        Summary("Search conversations")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<[String]> & ProvidesDialog {

@@ -14,7 +14,7 @@ struct GenerateNewConversationLinkIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Initial Message"),
-        requestValueDialog: IntentDialog("What message should FlowDown pre-fill?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What message should we pre-fill?"))
     )
     var message: String?
 
@@ -30,7 +30,7 @@ struct GenerateNewConversationLinkIntent: AppIntent {
         let link = url.absoluteString
 
         let dialogMessage = String(
-            localized: "Use the Open URL action with \(link) to launch FlowDown and start a conversation."
+            localized: "Use the Open URL action with \(link) to launch the app and start a conversation."
         )
 
         let dialog = IntentDialog(.init(stringLiteral: dialogMessage))

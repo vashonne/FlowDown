@@ -4,7 +4,7 @@ import Foundation
 import UIKit
 import UniformTypeIdentifiers
 
-struct GenerateChatResponseIntent: AppIntent {
+struct QuickResponseIntent: AppIntent {
     static var title: LocalizedStringResource {
         LocalizedStringResource("Quick Reply")
     }
@@ -17,13 +17,13 @@ struct GenerateChatResponseIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should answer?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should answer?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Message"),
-        requestValueDialog: IntentDialog("What do you want to ask?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What do you want to ask?"))
     )
     var message: String
 
@@ -40,10 +40,7 @@ struct GenerateChatResponseIntent: AppIntent {
     var enableMemory: Bool
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Quick Reply") {
-            \.$saveToConversation
-            \.$enableMemory
-        }
+        Summary("Quick Reply")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
@@ -76,20 +73,20 @@ struct GenerateChatResponseWithImagesIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should answer?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should answer?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Message"),
-        requestValueDialog: IntentDialog("What do you want to ask?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What do you want to ask?"))
     )
     var message: String
 
     @Parameter(
         title: LocalizedStringResource("Image"),
         supportedContentTypes: [.image],
-        requestValueDialog: IntentDialog("Select an image to include.")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Select an image to include."))
     )
     var image: IntentFile?
 
@@ -106,10 +103,7 @@ struct GenerateChatResponseWithImagesIntent: AppIntent {
     var enableMemory: Bool
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Quick Reply with Image") {
-            \.$saveToConversation
-            \.$enableMemory
-        }
+        Summary("Quick Reply with Image")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {

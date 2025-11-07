@@ -14323,18 +14323,18 @@
         }
       }
     },
-    "Use the Open URL action with %@ to launch FlowDown and start a conversation." : {
+    "Use the Open URL action with %@ to launch the app and start a conversation." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use the Open URL action with %@ to launch FlowDown and start a conversation."
+            "value" : "Use the Open URL action with %@ to launch the app and start a conversation."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "稍后请使用 打开 URL 快捷指令来启动 FlowDown 并开始新的对话。"
+            "value" : "稍后请使用打开 URL 快捷步骤来启动软件并开始对话。"
           }
         }
       }
@@ -15187,18 +15187,18 @@
         }
       }
     },
-    "What message should FlowDown pre-fill?" : {
+    "What message should we pre-fill?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "What message should FlowDown pre-fill?"
+            "value" : "What message should we pre-fill?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你希望预填充怎样的消息到 FlowDown？"
+            "value" : "你希望预先填写怎样的消息？"
           }
         }
       }

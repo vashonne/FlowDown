@@ -14,13 +14,13 @@ struct ImproveWritingMoreProfessionalIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should rewrite the text?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should rewrite the text?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Content"),
-        requestValueDialog: IntentDialog("What text should be rewritten?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What text should be rewritten?"))
     )
     var text: String
 
@@ -60,13 +60,13 @@ struct ImproveWritingMoreFriendlyIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should rewrite the text?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should rewrite the text?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Content"),
-        requestValueDialog: IntentDialog("What text should be rewritten?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What text should be rewritten?"))
     )
     var text: String
 
@@ -106,13 +106,13 @@ struct ImproveWritingMoreConciseIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should rewrite the text?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should rewrite the text?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Content"),
-        requestValueDialog: IntentDialog("What text should be rewritten?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What text should be rewritten?"))
     )
     var text: String
 

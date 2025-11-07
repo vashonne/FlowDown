@@ -14,13 +14,13 @@ struct SummarizeTextIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should summarize the text?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should summarize the text?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Content"),
-        requestValueDialog: IntentDialog("What text should be summarized?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What text should be summarized?"))
     )
     var text: String
 
@@ -54,13 +54,13 @@ struct SummarizeTextUsingListIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should summarize the text?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should summarize the text?"))
     )
     var model: ShortcutsEntities.ModelEntity?
 
     @Parameter(
         title: LocalizedStringResource("Content"),
-        requestValueDialog: IntentDialog("What text should be summarized?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("What text should be summarized?"))
     )
     var text: String
 

@@ -14,7 +14,7 @@ struct SetConversationModelIntent: AppIntent {
 
     @Parameter(
         title: LocalizedStringResource("Model"),
-        requestValueDialog: IntentDialog("Which model should be the default?")
+        requestValueDialog: IntentDialog(LocalizedStringResource("Which model should be the default?"))
     )
     var model: ShortcutsEntities.ModelEntity
 

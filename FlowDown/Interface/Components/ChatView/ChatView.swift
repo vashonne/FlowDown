@@ -379,8 +379,7 @@ extension ChatView {
             guard let conv else { return nil }
             guard let convMenu = ConversationManager.shared.menu(
                 forConversation: conv,
-                view: self,
-                suggestNewSelection: onSuggestSelection ?? { _ in }
+                view: self
             ) else { return nil }
 
             #if targetEnvironment(macCatalyst)

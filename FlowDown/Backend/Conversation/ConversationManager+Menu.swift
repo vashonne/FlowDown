@@ -19,8 +19,7 @@ private let dateFormatter = DateFormatter().with {
 extension ConversationManager {
     func menu(
         forConversation identifier: Conversation.ID?,
-        view: UIView,
-        suggestNewSelection: @escaping (Conversation.ID) -> Void
+        view: UIView
     ) -> UIMenu? {
         guard let controller = view.parentViewController else { return nil }
         guard let conv = conversation(identifier: identifier) else { return nil }
@@ -301,7 +300,7 @@ extension ConversationManager {
                                                     identifier: conv.id,
                                                     model: model
                                                 ) { convId in
-                                                    suggestNewSelection(convId)
+                                                    ChatSelection.shared.select(convId, options: [.collapseSidebar])
                                                 } completion: { result in
                                                     continuation.resume(returning: result)
                                                 }
@@ -393,7 +392,7 @@ extension ConversationManager {
                             image: UIImage(systemName: "doc.on.doc")
                         ) { _ in
                             if let id = ConversationManager.shared.duplicateConversation(identifier: conv.id) {
-                                suggestNewSelection(id)
+                                ChatSelection.shared.select(id, options: [.collapseSidebar])
                             }
                         },
                     ])
@@ -408,7 +407,7 @@ extension ConversationManager {
                     ) { _ in
                         ConversationManager.shared.deleteConversation(identifier: conv.id)
                         if let first = ConversationManager.shared.conversations.value.values.first?.id {
-                            suggestNewSelection(first)
+                            ChatSelection.shared.select(first)
                         }
                     }
                 } else {
@@ -436,7 +435,7 @@ extension ConversationManager {
                             ) { _ in
                                 ConversationManager.shared.deleteConversation(identifier: conv.id)
                                 if let first = ConversationManager.shared.conversations.value.values.first?.id {
-                                    suggestNewSelection(first)
+                                    ChatSelection.shared.select(first)
                                 }
                             },
                         ].compactMap(\.self)

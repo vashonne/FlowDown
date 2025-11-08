@@ -2043,18 +2043,18 @@
         }
       }
     },
-    "Classify Content with Image" : {
+    "Classify Image" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Classify Content with Image"
+            "value" : "Classify Image"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "分类内容（含图像）"
+            "value" : "分类图像"
           }
         }
       }
@@ -6121,6 +6121,12 @@
     },
     "Generate Model Response (Can Send Image)" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generate Model Response (Can Send Image)"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",

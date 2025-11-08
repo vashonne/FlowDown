@@ -91,7 +91,7 @@ struct ClassifyContentIntent: AppIntent {
 @available(iOS 18.0, macCatalyst 18.0, *)
 struct ClassifyContentWithImageIntent: AppIntent {
     static var title: LocalizedStringResource {
-        "Classify Content with Image"
+        "Classify Image"
     }
 
     static var description: IntentDescription {

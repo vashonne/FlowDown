@@ -257,8 +257,6 @@ extension ModelManager {
 }
 
 extension ModelManager {
-    static let indicatorText = " ●"
-
     /// Get the body fields configured for a cloud model
     /// - Parameter identifier: The model identifier
     /// - Returns: A dictionary of body fields, or empty dictionary if not found or empty
@@ -451,7 +449,7 @@ extension ModelManager {
                             counter += 1
                             if counter > newReasoningContentChunkSize {
                                 continuation.yield(.init(
-                                    reasoningContent: (responseContent.reasoningContent + Self.indicatorText)
+                                    reasoningContent: responseContent.reasoningContent
                                         .trimmingCharacters(in: .whitespacesAndNewlines),
                                     content: responseContent.content
                                         .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -471,7 +469,7 @@ extension ModelManager {
                                 continuation.yield(.init(
                                     reasoningContent: responseContent.reasoningContent
                                         .trimmingCharacters(in: .whitespacesAndNewlines),
-                                    content: (responseContent.content + Self.indicatorText)
+                                    content: responseContent.content
                                         .trimmingCharacters(in: .whitespacesAndNewlines)
                                 ))
                                 await sleepOnce()

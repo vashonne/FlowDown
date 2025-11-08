@@ -52,6 +52,7 @@ extension ConversationSession {
                     }
                 }
 
+                await currentMessageListView.loading()
                 await requestUpdate(view: currentMessageListView)
                 await doInfereExecute(
                     modelID: modelID,
@@ -135,18 +136,6 @@ extension ConversationSession {
         }
 
         stopThinkingForAll()
-        for message in messages {
-            if message.document.hasSuffix(ModelManager.indicatorText) {
-                var newDocument = message.document
-                newDocument.removeLast(ModelManager.indicatorText.count)
-                message.update(\.document, to: newDocument)
-            }
-            if message.reasoningContent.hasSuffix(ModelManager.indicatorText) {
-                var newReasoningContent = message.reasoningContent
-                newReasoningContent.removeLast(ModelManager.indicatorText.count)
-                message.update(\.reasoningContent, to: newReasoningContent)
-            }
-        }
 
         await requestUpdate(view: currentMessageListView)
         saveIfNeeded(object)

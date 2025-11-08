@@ -7,6 +7,7 @@ final class DisposableExporter: NSObject {
         case text
     }
 
+    @MainActor
     private static var activeExporters: [UUID: DisposableExporter] = [:]
 
     private let identifier = UUID()
@@ -42,6 +43,13 @@ final class DisposableExporter: NSObject {
     }
 
     func run(anchor toView: UIView, mode: RunMode = .file) {
+        Task { @MainActor in
+            self.runMainActor(anchor: toView, mode: mode)
+        }
+    }
+
+    @MainActor
+    private func runMainActor(anchor toView: UIView, mode: RunMode = .file) {
         guard let presentingViewController = toView.parentViewController else {
             cleanup()
             return
@@ -82,10 +90,12 @@ final class DisposableExporter: NSObject {
         }
     }
 
+    @MainActor
     private func retainSelf() {
         Self.activeExporters[identifier] = self
     }
 
+    @MainActor
     private func cleanup() {
         try? FileManager.default.removeItem(at: deletableItem)
         Self.activeExporters.removeValue(forKey: identifier)

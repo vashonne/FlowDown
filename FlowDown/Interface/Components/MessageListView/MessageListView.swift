@@ -118,9 +118,7 @@ final class MessageListView: UIView {
         if isAutoScrollingToBottom || wasNearBottom {
             let targetOffset = listView.maximumContentOffset
             if abs(listView.contentOffset.y - targetOffset.y) > autoScrollTolerance {
-                UIView.performWithoutAnimation {
-                    listView.setContentOffset(targetOffset, animated: false)
-                }
+                listView.scroll(to: targetOffset)
             }
             if wasNearBottom {
                 isAutoScrollingToBottom = true

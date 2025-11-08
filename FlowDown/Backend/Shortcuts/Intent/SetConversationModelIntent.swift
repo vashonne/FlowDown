@@ -14,9 +14,7 @@ struct SetConversationModelIntent: AppIntent {
     var model: ShortcutsEntities.ModelEntity
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Set the default conversation model") {
-            \.$model
-        }
+        Summary("Set the default conversation model to \(\.$model)")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {

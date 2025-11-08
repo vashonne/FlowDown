@@ -425,22 +425,6 @@
         }
       }
     },
-    "Add any additional details for the classification." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add any additional details for the classification."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请补充任何额外的分类细节。"
-          }
-        }
-      }
-    },
     "Add Model" : {
       "localizations" : {
         "en" : {
@@ -1515,22 +1499,6 @@
         }
       }
     },
-    "Browse recent conversations" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Browse recent conversations"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "浏览最近的对话"
-          }
-        }
-      }
-    },
     "Browse, search, and manage stored memories." : {
       "localizations" : {
         "en" : {
@@ -2055,38 +2023,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "分类内容（含图像）"
-          }
-        }
-      }
-    },
-    "Classify the provided content using the candidate list" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Classify the provided content using the candidate list"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用候选列表对提供的内容进行分类"
-          }
-        }
-      }
-    },
-    "Classify the provided image using the candidate list" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Classify the provided image using the candidate list"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用候选列表对提供的图像进行分类"
           }
         }
       }
@@ -3037,34 +2973,18 @@
         }
       }
     },
-    "Create a blank conversation link" : {
+    "Create a deep link that starts a new conversation in app" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create a blank conversation link"
+            "value" : "Create a deep link that starts a new conversation in app"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "创建空白对话链接"
-          }
-        }
-      }
-    },
-    "Create a conversation link with a preset message" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create a conversation link with a preset message"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "创建带预设消息的对话链接"
+            "value" : "创建一个用于打开软件并进行新对话的链接"
           }
         }
       }
@@ -3085,18 +3005,18 @@
         }
       }
     },
-    "Create a FlowDown deep link that starts a new conversation." : {
+    "Create a link to present ${message} in app" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create a FlowDown deep link that starts a new conversation."
+            "value" : "Create a link to present ${message} in app"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "创建一个能打开 FlowDown 进行对话的链接。"
+            "value" : "创建一个链接来打开对话并呈现 ${message}"
           }
         }
       }
@@ -4785,6 +4705,22 @@
         }
       }
     },
+    "Enter a keyword to search for in your conversations. Leave empty to return recent conversations." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a keyword to search for in your conversations. Leave empty to return recent conversations."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入搜索对话的关键词。留空来返回最近的对话。"
+          }
+        }
+      }
+    },
     "Enter instructions..." : {
       "localizations" : {
         "en" : {
@@ -6311,18 +6247,18 @@
         }
       }
     },
-    "How many results should FlowDown return?" : {
+    "How many results should we return?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How many results should FlowDown return?"
+            "value" : "How many results should we return?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FlowDown 应返回多少条结果？"
+            "value" : "需要多少个结果？"
           }
         }
       }
@@ -6520,22 +6456,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "通俗来说，如果关闭此选项，在创建新对话时将不沿用对话内选择的新模型。"
-          }
-        }
-      }
-    },
-    "If you are unsure, use '%@' for VALUE." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you are unsure, use '%@' for VALUE."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "如果不确定，请将 VALUE 设置为“%@”。"
           }
         }
       }
@@ -10647,22 +10567,6 @@
         }
       }
     },
-    "Respond only with XML formatted as <classification><label>VALUE</label></classification>, replacing VALUE with a label from the candidate list." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Respond only with XML formatted as <classification><label>VALUE</label></classification>, replacing VALUE with a label from the candidate list."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅返回 XML 格式 <classification><label>VALUE</label></classification>，并将 VALUE 替换为候选列表中的标签。"
-          }
-        }
-      }
-    },
     "Restricted" : {
       "localizations" : {
         "en" : {
@@ -10727,18 +10631,18 @@
         }
       }
     },
-    "Return the full transcript of the most recent FlowDown conversation." : {
+    "Return the full document of the most recent conversation" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Return the full transcript of the most recent FlowDown conversation."
+            "value" : "Return the full document of the most recent conversation"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "返回最近一次 FlowDown 对话的完整记录。"
+            "value" : "返回最近对话的完整文档"
           }
         }
       }
@@ -11143,18 +11047,18 @@
         }
       }
     },
-    "Search saved conversations by keyword" : {
+    "Search saved conversations by ${keyword}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search saved conversations by keyword"
+            "value" : "Search saved conversations by ${keyword}"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "按关键字搜索已保存的对话"
+            "value" : "使用 ${keyword} 搜索对话"
           }
         }
       }
@@ -11271,22 +11175,6 @@
         }
       }
     },
-    "Select exactly one label from the candidate list." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select exactly one label from the candidate list."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅从候选列表中选择一个标签。"
-          }
-        }
-      }
-    },
     "Select from Existing" : {
       "localizations" : {
         "en" : {
@@ -11351,18 +11239,34 @@
         }
       }
     },
-    "Send your message with the default model" : {
+    "Send your ${message} with the default model" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Send your message with the default model"
+            "value" : "Send your ${message} with the default model"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用默认模型发送消息"
+            "value" : "使用默认模型发送 ${message}"
+          }
+        }
+      }
+    },
+    "Send your ${message} with the selected model" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send your ${message} with the selected model"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用选中的模型发送 ${message}"
           }
         }
       }
@@ -11379,22 +11283,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用默认模型发送消息，可选择附加图像"
-          }
-        }
-      }
-    },
-    "Send your message with the selected model" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Send your message with the selected model"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用所选模型发送消息"
           }
         }
       }
@@ -11511,18 +11399,18 @@
         }
       }
     },
-    "Set the default conversation model" : {
+    "Set the default conversation model to ${model}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set the default conversation model"
+            "value" : "Set the default conversation model to ${model}"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "设置默认对话模型"
+            "value" : "将对话的默认模型设置为 ${model}"
           }
         }
       }
@@ -14563,18 +14451,18 @@
         }
       }
     },
-    "Use the default model to classify your content" : {
+    "Use the default model to classify your ${content}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use the default model to classify your content"
+            "value" : "Use the default model to classify your ${content}"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用默认模型对内容进行分类"
+            "value" : "使用默认模型分类 ${content}"
           }
         }
       }
@@ -14611,18 +14499,18 @@
         }
       }
     },
-    "Use the Open URL action with %@ to launch the app and start a conversation." : {
+    "Use the Open URL action with %@ to launch the app and start a conversation" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use the Open URL action with %@ to launch the app and start a conversation."
+            "value" : "Use the Open URL action with %@ to launch the app and start a conversation"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "稍后请使用打开 URL 快捷步骤来启动软件并开始对话。"
+            "value" : "请使用“打开 URL”快捷指令步骤来启动软件并开始新对话"
           }
         }
       }
@@ -14643,18 +14531,18 @@
         }
       }
     },
-    "Use the selected model to classify your content" : {
+    "Use the selected model to classify your ${content}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use the selected model to classify your content"
+            "value" : "Use the selected model to classify your ${content}"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用所选模型对内容进行分类"
+            "value" : "使用选中的模型来分类 ${content}"
           }
         }
       }

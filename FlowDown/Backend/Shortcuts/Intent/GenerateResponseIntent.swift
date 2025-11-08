@@ -27,14 +27,14 @@ struct GenerateResponseIntent: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Send your message with the selected model") {
+            Summary("Send your \(\.$message) with the selected model") {
                 \.$model
                 \.$message
                 \.$saveToConversation
                 \.$enableMemory
             }
         } otherwise: {
-            Summary("Send your message with the default model") {
+            Summary("Send your \(\.$message) with the default model") {
                 \.$model
                 \.$message
                 \.$saveToConversation

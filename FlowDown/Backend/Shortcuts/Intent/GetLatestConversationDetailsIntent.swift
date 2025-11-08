@@ -7,7 +7,7 @@ struct GetLatestConversationDetailsIntent: AppIntent {
     }
 
     static var description: IntentDescription {
-        "Return the full transcript of the most recent FlowDown conversation."
+        "Return the full document of the most recent conversation"
     }
 
     static var authenticationPolicy: IntentAuthenticationPolicy {

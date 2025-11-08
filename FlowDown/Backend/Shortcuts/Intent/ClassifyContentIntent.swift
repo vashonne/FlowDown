@@ -19,23 +19,16 @@ struct ClassifyContentIntent: AppIntent {
     @Parameter(title: "Candidates", default: [], requestValueDialog: "Provide the candidate labels.")
     var candidates: [String]
 
-    @Parameter(title: "Candidates (Text Input)", default: nil, requestValueDialog: "Provide candidate labels separated by new lines or commas.")
-    var candidateTextInput: String?
-
     static var parameterSummary: some ParameterSummary {
         When(\.$model, .hasAnyValue) {
-            Summary("Use the selected model to classify your content") {
+            Summary("Use the selected model to classify your \(\.$content)") {
                 \.$model
-                \.$content
                 \.$candidates
-                \.$candidateTextInput
             }
         } otherwise: {
-            Summary("Use the default model to classify your content") {
+            Summary("Use the default model to classify your \(\.$content)") {
                 \.$model
-                \.$content
                 \.$candidates
-                \.$candidateTextInput
             }
         }
     }
@@ -47,8 +40,7 @@ struct ClassifyContentIntent: AppIntent {
         }
 
         let resolvedCandidates = try CandidateInputResolver.resolveCandidates(
-            manualCandidates: candidates,
-            scriptInput: candidateTextInput
+            manualCandidates: candidates
         )
 
         let request = try ClassificationPromptBuilder.make(
@@ -112,8 +104,7 @@ struct ClassifyContentWithImageIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
         let resolvedCandidates = try CandidateInputResolver.resolveCandidates(
-            manualCandidates: candidates,
-            scriptInput: candidateTextInput
+            manualCandidates: candidates
         )
 
         let request = try ClassificationPromptBuilder.make(
@@ -180,49 +171,41 @@ private enum ClassificationPromptBuilder {
 
         let candidateList = sanitizedCandidates.enumerated()
             .map { index, value in
-                "\(index + 1). \(value)"
+                // use xml tagging to help model better recognize the candidates
+                let key = index + 1
+                let keyText = "Label-\(key)"
+                return "<\(keyText)>\(value)</\(keyText)>"
             }
             .joined(separator: "\n")
 
-        let baseInstruction = String(
-            localized: "You are a classification assistant. Choose the best candidate for the provided content."
-        )
-
-        let imageInstruction = String(
-            localized: "An image is provided with this request. Consider the visual details when selecting the candidate."
-        )
-
-        let candidateUsageInstruction = String(
-            localized: "Select exactly one label from the candidate list."
-        )
-
-        let xmlOutputInstruction = String(
-            localized: "Respond only with XML formatted as <classification><label>VALUE</label></classification>, replacing VALUE with a label from the candidate list."
-        )
-
-        let fallbackInstructionFormat = String(
-            localized: "If you are unsure, use '%@' for VALUE."
-        )
-        let fallbackInstruction = String(format: fallbackInstructionFormat, primaryCandidate)
-
-        var instructionSegments: [String] = [baseInstruction]
+        var instructionSegments = [
+            "You are a classification assistant. Choose the best candidate for the provided content.",
+        ]
 
         if includeImageInstruction {
-            instructionSegments.append(imageInstruction)
+            instructionSegments.append(
+                "An image is provided with this request. Consider the visual details when selecting the candidate."
+            )
         }
 
-        instructionSegments.append(candidateUsageInstruction)
+        instructionSegments.append(
+            "An image is provided with this request. Consider the visual details when selecting the candidate."
+        )
 
-        instructionSegments.append(String(localized: "Candidates:"))
+        instructionSegments.append("Candidates:")
         instructionSegments.append(candidateList)
 
         if !trimmedContent.isEmpty {
-            instructionSegments.append(String(localized: "Content:"))
+            instructionSegments.append("Content:")
             instructionSegments.append(trimmedContent)
         }
 
-        instructionSegments.append(xmlOutputInstruction)
-        instructionSegments.append(fallbackInstruction)
+        instructionSegments.append(
+            "Respond only with XML formatted as <classification><label>VALUE</label></classification>, replacing VALUE with a label from the candidate list. Without explanation or additional text or quotation marks."
+        )
+        instructionSegments.append(
+            "If you are unsure, use \(primaryCandidate) for VALUE."
+        )
 
         let message = instructionSegments.joined(separator: "\n\n")
 
@@ -236,8 +219,7 @@ private enum ClassificationPromptBuilder {
 
 private enum CandidateInputResolver {
     static func resolveCandidates(
-        manualCandidates: [String],
-        scriptInput: String?
+        manualCandidates: [String]
     ) throws -> [String] {
         var ordered: [String] = []
         var seen: Set<String> = []
@@ -252,63 +234,11 @@ private enum CandidateInputResolver {
 
         manualCandidates.forEach(append)
 
-        if let scriptInput,
-           !scriptInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        {
-            parseScriptCandidates(from: scriptInput).forEach(append)
-        }
-
         guard !ordered.isEmpty else {
             throw ShortcutError.invalidCandidates
         }
 
         return ordered
-    }
-
-    private static func parseScriptCandidates(from text: String) -> [String] {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return [] }
-
-        if let data = trimmed.data(using: .utf8) {
-            if let array = try? JSONSerialization.jsonObject(with: data) as? [Any] {
-                return array.compactMap { value in
-                    switch value {
-                    case let string as String:
-                        string
-                    case let number as NSNumber:
-                        number.stringValue
-                    default:
-                        nil
-                    }
-                }
-            }
-
-            if let dictionary = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                let sortedEntries = dictionary.sorted { lhs, rhs in
-                    lhs.key.localizedCaseInsensitiveCompare(rhs.key) == .orderedAscending
-                }
-
-                let values = sortedEntries.compactMap { _, value -> String? in
-                    switch value {
-                    case let string as String:
-                        string
-                    case let number as NSNumber:
-                        number.stringValue
-                    default:
-                        nil
-                    }
-                }
-
-                if !values.isEmpty {
-                    return values
-                }
-
-                return sortedEntries.map(\.key)
-            }
-        }
-
-        let separators = CharacterSet(charactersIn: ",;\n")
-        return trimmed.components(separatedBy: separators)
     }
 }
 

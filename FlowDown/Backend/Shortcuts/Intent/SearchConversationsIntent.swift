@@ -15,28 +15,20 @@ struct SearchConversationsIntent: AppIntent {
         .requiresAuthentication
     }
 
-    @Parameter(title: "Keyword", default: nil)
-    var keyword: String?
+    @Parameter(title: "Keyword", default: "", requestValueDialog: "Enter a keyword to search for in your conversations. Leave empty to return recent conversations.")
+    var keyword: String
 
-    @Parameter(title: "Result Limit", default: 5, requestValueDialog: "How many results should FlowDown return?")
+    @Parameter(title: "Result Limit", default: 5, requestValueDialog: "How many results should we return?")
     var resultLimit: Int
 
     static var parameterSummary: some ParameterSummary {
-        When(\.$keyword, .hasAnyValue) {
-            Summary("Search saved conversations by keyword") {
-                \.$keyword
-                \.$resultLimit
-            }
-        } otherwise: {
-            Summary("Browse recent conversations") {
-                \.$keyword
-                \.$resultLimit
-            }
+        Summary("Search saved conversations by \(\.$keyword)") {
+            \.$resultLimit
         }
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<[String]> & ProvidesDialog {
-        let sanitizedKeyword = keyword?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
+        let sanitizedKeyword = keyword.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
 
         let normalizedLimit = SearchConversationsIntentHelper.normalizeLimit(resultLimit)
 

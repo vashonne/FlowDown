@@ -15,6 +15,7 @@ struct PollinationsModel: Codable {
     let output_modalities: [String]
     let tools: Bool?
     let vision: Bool?
+    let audio: Bool?
 }
 
 class PollinationsService {
@@ -52,13 +53,9 @@ class PollinationsService {
     func createCloudModel(from pollinationsModel: PollinationsModel) -> CloudModel {
         var capabilities: Set<ModelCapabilities> = []
 
-        if pollinationsModel.tools == true {
-            capabilities.insert(.tool)
-        }
-
-        if pollinationsModel.vision == true {
-            capabilities.insert(.visual)
-        }
+        if pollinationsModel.tools == true { capabilities.insert(.tool) }
+        if pollinationsModel.vision == true { capabilities.insert(.visual) }
+        if pollinationsModel.audio == true { capabilities.insert(.auditory) }
 
         let comment = String(
             localized: "This service is provided free of charge by pollinations.ai and includes rate limits. It may be unavailable in certain countries or regions. If you encounter issues, please set up your own model service."

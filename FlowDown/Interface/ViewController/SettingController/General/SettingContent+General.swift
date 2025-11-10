@@ -9,7 +9,6 @@ import AlertController
 import ConfigurableKit
 import Digger
 import MarkdownView
-import MLX
 import Storage
 import UIKit
 

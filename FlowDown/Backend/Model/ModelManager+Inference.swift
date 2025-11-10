@@ -9,7 +9,7 @@ import ChatClientKit
 import Foundation
 import FoundationModels
 import GPTEncoder
-import MLX
+@preconcurrency import MLX
 import Storage
 import UIKit
 
@@ -40,6 +40,8 @@ extension ModelManager {
 
             do {
                 let client = MLXChatClient(url: ModelManager.shared.modelContent(for: model))
+                client.collectedErrors = nil
+
                 let userContent: ChatRequestBody.Message.MessageContent<String, [ChatRequestBody.Message.ContentPart]> = {
                     guard model.capabilities.contains(.visual),
                           let imageURL = Self.testImageDataURL
@@ -52,7 +54,7 @@ extension ModelManager {
                     ])
                 }()
 
-                let response = try await client.chatCompletionRequest(
+                let stream = try await client.streamingChatCompletionRequest(
                     body: .init(
                         messages: [
                             .system(content: .text("Reply YES to every query.")),
@@ -63,10 +65,47 @@ extension ModelManager {
                     )
                 )
 
-                let text = response.choices.first?.message.content ?? ""
+                var reasoning = ""
+                var reasoningContent = ""
+                var responseContent = ""
+                var collectedToolCalls: [ToolCallRequest] = []
+
+                for try await object in stream {
+                    switch object {
+                    case let .chatCompletionChunk(chunk):
+                        guard let delta = chunk.choices.first?.delta else { continue }
+                        if let value = delta.reasoning { reasoning += value }
+                        if let value = delta.reasoningContent { reasoningContent += value }
+                        if let value = delta.content { responseContent += value }
+                    case let .tool(call):
+                        collectedToolCalls.append(call)
+                    }
+                }
+
+                var trimmedContent = responseContent
                     .trimmingCharacters(in: .whitespacesAndNewlines)
 
-                if text.isEmpty {
+                for terminator in ChatClientConstants.additionalTerminatingTokens {
+                    while trimmedContent.hasSuffix(terminator) {
+                        trimmedContent.removeLast(terminator.count)
+                    }
+                }
+
+                trimmedContent = trimmedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                if trimmedContent.isEmpty,
+                   reasoning.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   reasoningContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   collectedToolCalls.isEmpty
+                {
+                    if let error = client.collectedErrors, !error.isEmpty {
+                        throw NSError(
+                            domain: "Model",
+                            code: -1,
+                            userInfo: [NSLocalizedDescriptionKey: error]
+                        )
+                    }
+
                     completion(
                         .failure(
                             NSError(
@@ -77,7 +116,7 @@ extension ModelManager {
                         )
                     )
                 } else {
-                    Logger.model.debugFile("model \(model.model_identifier) generates output for test case: \(text)")
+                    Logger.model.debugFile("model \(model.model_identifier) generates output for test case: \(trimmedContent)")
                     completion(.success(()))
                 }
             } catch {
@@ -273,38 +312,18 @@ extension ModelManager {
         input: [ChatRequestBody.Message],
         tools: [ChatRequestBody.Tool]? = nil
     ) async throws -> InferenceMessage {
-        let client = try chatService(
-            for: modelID,
-            additionalBodyField: modelBodyFields(for: modelID)
+        let stream = try await streamingInfer(
+            with: modelID,
+            maxCompletionTokens: maxCompletionTokens,
+            input: input,
+            tools: tools
         )
-        let requestTemperature: Double = switch temperatureStrategy(for: modelID) {
-        case let .send(value):
-            value
-        }
-        let response = try await client.chatCompletionRequest(
-            body: .init(
-                messages: prepareRequestBody(modelID: modelID, messages: input),
-                maxCompletionTokens: maxCompletionTokens,
-                temperature: requestTemperature,
-                tools: tools
-            )
-        )
-        let message = response.choices.first?.message
-        let reasoning = message?.reasoning ?? .init()
-        let reasoningContent = message?.reasoningContent ?? .init()
 
-        let finalReasoning = if reasoning == reasoningContent, !reasoning.isEmpty {
-            reasoning
-        } else {
-            [reasoning, reasoningContent].filter { !$0.isEmpty }.joined()
+        var latest: InferenceMessage?
+        for try await message in stream {
+            latest = message
         }
-
-        return .init(
-            reasoningContent: finalReasoning,
-            content: message?.content ?? .init(),
-            // TODO: IMPL
-            tool: []
-        )
+        return latest ?? .init()
     }
 
     func streamingInfer(

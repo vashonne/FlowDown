@@ -3,25 +3,20 @@
 //  Copyright (c) 2025 ktiays. All rights reserved.
 //
 
-import CoreGraphics
 import CoreImage
 import Foundation
-import MLX
-import MLXLLM
 @preconcurrency import MLXLMCommon
-import MLXVLM
-import Tokenizers
 
 open class MLXChatClient: ChatService {
     private let url: URL
-    private let modelConfiguration: ModelConfiguration
-    private let emptyImage: CIImage = MLXImageUtilities.placeholderImage(
+    let modelConfiguration: ModelConfiguration
+    let emptyImage: CIImage = MLXImageUtilities.placeholderImage(
         size: .init(width: 64, height: 64)
     )
-    private let coordinator: MLXModelCoordinating
+    let coordinator: MLXModelCoordinating
 
     // Hex UTF-8 bytes EF BF BD
-    private static let decoderErrorSuffix = String(data: Data([0xEF, 0xBF, 0xBD]), encoding: .utf8)!
+    static let decoderErrorSuffix = String(data: Data([0xEF, 0xBF, 0xBD]), encoding: .utf8)!
 
     public var collectedErrors: String?
 
@@ -42,7 +37,7 @@ open class MLXChatClient: ChatService {
             .compactMap { chunk -> ChatCompletionChunk? in
                 switch chunk {
                 case let .chatCompletionChunk(chunk): return chunk
-                default: return nil // tool call
+                default: return nil // TODO: tool call
                 }
             }
             .compactMap { $0.choices.first?.delta }
@@ -106,261 +101,5 @@ open class MLXChatClient: ChatService {
         @ChatRequestBuilder _ builder: () -> [ChatRequest.BuildComponent]
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(ChatRequest(builder))
-    }
-
-    // MARK: - PRIVATE
-
-    private func streamingChatCompletionRequestExecute(
-        body: ChatRequestBody,
-        token: UUID
-    ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
-        var userInput = userInput(body: body)
-        let generateParameters = generateParameters(body: body)
-        let container: ModelContainer
-        do {
-            logger.debugFile("attempting to load LLM model from \(modelConfiguration.modelDirectory().absoluteString)")
-            container = try await coordinator.container(for: modelConfiguration, kind: .llm)
-            logger.infoFile("successfully loaded LLM model: \(modelConfiguration.name)")
-            userInput.images = []
-        } catch {
-            logger.debugFile("LLM load failed, attempting VLM model: \(error.localizedDescription)")
-            do {
-                container = try await coordinator.container(for: modelConfiguration, kind: .vlm)
-                logger.infoFile("successfully loaded VLM model: \(modelConfiguration.name)")
-                if userInput.images.isEmpty { userInput.images.append(.ciImage(emptyImage)) }
-            } catch {
-                logger.errorFile("failed to load model: \(error.localizedDescription)")
-                throw error
-            }
-        }
-
-        let lockedInput = userInput
-        return try await container.perform { context in
-            let input = try await context.processor.prepare(input: lockedInput)
-
-            return AsyncThrowingStream { continuation in
-                var latestOutputLength = 0
-                var isReasoning = false
-                var shouldRemoveLeadingWhitespace = true
-
-                func toggleReasoningIfNeeded(tokens: [Int]) -> Bool {
-                    // check last token, because the reasoning token are special to become 1 token
-                    if let lastToken = tokens.last {
-                        let text = context.tokenizer.decode(tokens: [lastToken]).trimmingCharacters(in: .whitespacesAndNewlines)
-                        if !isReasoning, text == REASONING_START_TOKEN {
-                            logger.infoFile("starting reasoning with token \(text)")
-                            isReasoning = true
-                            return true
-                        }
-                        if isReasoning, text == REASONING_END_TOKEN {
-                            logger.infoFile("end reasoning with token \(text)")
-                            isReasoning = false
-                            return true
-                        }
-                    }
-                    return false
-                }
-
-                func chunk(for text: String) -> ChatCompletionChunk? {
-                    let chunkRange = latestOutputLength ..< text.count
-                    let startIndex = text.index(text.startIndex, offsetBy: chunkRange.lowerBound)
-                    let endIndex = text.index(text.startIndex, offsetBy: chunkRange.upperBound)
-                    var chunkContent = String(text[startIndex ..< endIndex])
-
-                    if shouldRemoveLeadingWhitespace {
-                        chunkContent = chunkContent.trimmingCharactersFromStart(in: .whitespacesAndNewlines)
-                        shouldRemoveLeadingWhitespace = chunkContent.isEmpty
-                    }
-
-                    guard !chunkContent.isEmpty else { return nil }
-
-                    let delta = if isReasoning {
-                        ChatCompletionChunk.Choice.Delta(reasoningContent: chunkContent)
-                    } else {
-                        ChatCompletionChunk.Choice.Delta(content: chunkContent)
-                    }
-                    let choice: ChatCompletionChunk.Choice = .init(delta: delta)
-                    return .init(choices: [choice])
-                }
-
-                var regularContentOutputLength = 0
-
-                Task.detached(priority: .userInitiated) {
-                    do {
-                        let result = try MLXLMCommon.generate(
-                            input: input,
-                            parameters: generateParameters,
-                            context: context
-                        ) { tokens in
-                            var text = context.tokenizer.decode(tokens: tokens)
-                            defer { latestOutputLength = text.count }
-
-                            while text.hasSuffix(Self.decoderErrorSuffix) {
-                                text.removeLast(Self.decoderErrorSuffix.count)
-                            }
-
-                            if toggleReasoningIfNeeded(tokens: tokens) {
-                                shouldRemoveLeadingWhitespace = true
-                            } else {
-                                if let chunk = chunk(for: text) {
-                                    if !isReasoning {
-                                        regularContentOutputLength += chunk.choices
-                                            .compactMap(\.delta.content?.count)
-                                            .reduce(0, +)
-                                    }
-                                    continuation.yield(ChatServiceStreamObject.chatCompletionChunk(chunk: chunk))
-                                }
-                            }
-
-                            // for reasoning models, still expect something in return
-                            // this is mainly because title generation requires that
-                            if regularContentOutputLength >= body.maxCompletionTokens ?? 4096 {
-                                logger.infoFile("reached max completion tokens: \(regularContentOutputLength)")
-                                return .stop
-                            }
-
-                            for terminator in ChatClientConstants.additionalTerminatingTokens {
-                                var shouldTerminate = false
-                                while text.hasSuffix(terminator) {
-                                    text.removeLast(terminator.count)
-                                    shouldTerminate = true
-                                }
-                                if shouldTerminate {
-                                    logger.infoFile("terminating due to additional terminator: \(terminator)")
-                                    return .stop
-                                }
-                            }
-
-                            if Task.isCancelled {
-                                logger.debugFile("cancelling current inference due to Task.isCancelled")
-                                return .stop
-                            }
-
-                            return .more
-                        }
-
-                        let output = result.output
-                        if let chunk = chunk(for: output) {
-                            continuation.yield(ChatServiceStreamObject.chatCompletionChunk(chunk: chunk))
-                        }
-
-                        logger.infoFile("inference completed, total output length: \(output.count), regular content: \(regularContentOutputLength)")
-                        MLXChatClientQueue.shared.release(token: token)
-                        continuation.finish()
-                    } catch {
-                        logger.errorFile("inference failed: \(error.localizedDescription)")
-                        MLXChatClientQueue.shared.release(token: token)
-                        continuation.finish(throwing: error)
-                    }
-                }
-            }
-        }.eraseToAnyAsyncSequence()
-    }
-
-    private func resolve(body: ChatRequestBody, stream: Bool) -> ChatRequestBody {
-        var body = body
-        body.stream = stream
-        body.streamOptions = stream ? body.streamOptions : nil
-        return body
-    }
-
-    private func userInputContent(for messageContent: ChatRequestBody.Message.MessageContent<String, [String]>) -> String {
-        switch messageContent {
-        case let .text(text):
-            text
-        case let .parts(strings):
-            strings.joined(separator: "\n")
-        }
-    }
-
-    private func userInput(body: ChatRequestBody) -> UserInput {
-        var messages: [[String: String]] = []
-        var images: [UserInput.Image] = []
-        for message in body.messages {
-            switch message {
-            case let .assistant(content, _, _, _):
-                guard let content else {
-                    continue
-                }
-                let msg = ["role": "assistant", "content": userInputContent(for: content)]
-                messages.append(msg)
-            case let .system(content, _):
-                let msg = ["role": "system", "content": userInputContent(for: content)]
-                messages.append(msg)
-            case let .user(content, _):
-                switch content {
-                case let .text(text):
-                    let msg = ["role": "user", "content": text]
-                    messages.append(msg)
-                case let .parts(contentParts):
-                    for part in contentParts {
-                        switch part {
-                        case let .text(text):
-                            let msg = ["role": "user", "content": text]
-                            messages.append(msg)
-                        case let .imageURL(url, _):
-                            // The URL is a "local URL" containing base64 encoded image data.
-                            // data:[<media-type>][;base64],<data>
-                            guard let text = url.absoluteString.components(separatedBy: ";base64,").last,
-                                  let data = Data(base64Encoded: text)
-                            else {
-                                assertionFailure()
-                                continue
-                            }
-                            guard var image = MLXImageUtilities.decodeImage(data: data) else {
-                                assertionFailure()
-                                continue
-                            }
-                            // now, if image is smaller then 64x64, we need to resize it
-                            // hard limit on lower bound is 28x28 and variable to model
-                            if image.extent.width < 64 || image.extent.height < 64 {
-                                guard let resizedImage = MLXImageUtilities.resize(
-                                    image: image,
-                                    targetSize: .init(width: 64, height: 64),
-                                    contentMode: .contentAspectFit
-                                ) else {
-                                    assertionFailure()
-                                    continue
-                                }
-                                image = resizedImage
-                            }
-                            // hard limit on upper bound is variable and variable to model but 512x512 should be ok
-                            if image.extent.width > 512 || image.extent.height > 512 {
-                                guard let resizedImage = MLXImageUtilities.resize(
-                                    image: image,
-                                    targetSize: .init(width: 512, height: 512),
-                                    contentMode: .contentAspectFit
-                                ) else {
-                                    assertionFailure()
-                                    continue
-                                }
-                                image = resizedImage
-                            }
-                            images.append(.ciImage(image))
-                        case .audioBase64:
-                            // MLX local client does not support audio input yet.
-                            continue
-                        }
-                    }
-                }
-            default:
-                continue
-            }
-        }
-        return .init(messages: messages, images: images)
-    }
-
-    private func generateParameters(body: ChatRequestBody) -> GenerateParameters {
-        var parameters = GenerateParameters()
-        if let temperature = body.temperature {
-            parameters.temperature = Float(temperature)
-        }
-        if let topP = body.topP {
-            parameters.topP = Float(topP)
-        }
-        if let penalty = body.frequencyPenalty {
-            parameters.repetitionPenalty = Float(penalty)
-        }
-        return parameters
     }
 }

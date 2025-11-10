@@ -7,10 +7,10 @@
 
 @testable import ChatClientKit
 import Foundation
-import MLX
-import MLXLLM
-import MLXLMCommon
-import MLXVLM
+@preconcurrency import MLX
+@preconcurrency import MLXLLM
+@preconcurrency import MLXLMCommon
+@preconcurrency import MLXVLM
 import Testing
 
 @Suite("MLX Model Coordinator")

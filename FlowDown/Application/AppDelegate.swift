@@ -11,7 +11,6 @@ import Combine
 import ConfigurableKit
 import MarkdownView
 import MLX
-import MLXLMCommon
 import ScrubberKit
 import Storage
 import UIKit

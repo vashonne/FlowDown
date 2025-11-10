@@ -7,7 +7,7 @@
 
 @testable import ChatClientKit
 import Foundation
-import MLX
+@preconcurrency import MLX
 import Testing
 
 @Suite("MLX ChatClient Integration")

@@ -52,6 +52,20 @@ jobs:
             git -C "${MODEL_DIR}" pull --ff-only
           fi
 
+      - name: Prepare MLX testing fixture
+        shell: bash
+        run: |
+          set -eo pipefail
+          MODEL_ROOT="${HOME}/mlx_models"
+          MODEL_DIR="${MODEL_ROOT}/gemma-3-1b-it-qat-4bit"
+          FIXTURE_PARENT="${HOME}/.testing"
+          FIXTURE_DIR="${FIXTURE_PARENT}/mlx_testing_model"
+          mkdir -p "${FIXTURE_PARENT}"
+          if [ -e "${FIXTURE_DIR}" ] || [ -L "${FIXTURE_DIR}" ]; then
+            rm -rf "${FIXTURE_DIR}"
+          fi
+          ln -s "${MODEL_DIR}" "${FIXTURE_DIR}"
+
       - name: Resolve Swift package dependencies
         shell: bash
         run: |

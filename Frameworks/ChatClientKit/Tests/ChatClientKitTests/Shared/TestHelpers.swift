@@ -10,7 +10,7 @@ import CoreFoundation
 import CoreGraphics
 import Foundation
 import ImageIO
-import MLX
+@preconcurrency import MLX
 import Testing
 
 /// Helper functions for tests

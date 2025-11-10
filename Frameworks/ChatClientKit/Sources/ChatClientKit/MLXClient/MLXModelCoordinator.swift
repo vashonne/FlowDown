@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import MLXLLM
+@preconcurrency import MLXLLM
 @preconcurrency import MLXLMCommon
-import MLXVLM
+@preconcurrency import MLXVLM
 
 public enum MLXModelKind: Equatable {
     case llm

@@ -8,17 +8,17 @@
 import Foundation
 import ServerEvent
 
-protocol URLSessioning {
+protocol URLSessioning: Sendable {
     func data(for request: URLRequest) async throws -> (Data, URLResponse)
 }
 
 extension URLSession: URLSessioning {}
 
-protocol EventStreamTask {
+protocol EventStreamTask: Sendable {
     func events() -> AsyncStream<EventSource.EventType>
 }
 
-protocol EventSourceProducing {
+protocol EventSourceProducing: Sendable {
     func makeDataTask(for request: URLRequest) -> EventStreamTask
 }
 
@@ -30,7 +30,7 @@ struct DefaultEventSourceFactory: EventSourceProducing {
     }
 }
 
-private struct DefaultEventStreamTask: EventStreamTask {
+private struct DefaultEventStreamTask: EventStreamTask, @unchecked Sendable {
     let dataTask: EventSource.DataTask
 
     func events() -> AsyncStream<EventSource.EventType> {
@@ -38,11 +38,11 @@ private struct DefaultEventStreamTask: EventStreamTask {
     }
 }
 
-struct RemoteChatClientDependencies {
+struct RemoteChatClientDependencies: Sendable {
     var session: URLSessioning
     var eventSourceFactory: EventSourceProducing
-    var responseDecoderFactory: () -> JSONDecoding
-    var chunkDecoderFactory: () -> JSONDecoding
+    var responseDecoderFactory: @Sendable () -> JSONDecoding
+    var chunkDecoderFactory: @Sendable () -> JSONDecoding
     var errorExtractor: RemoteChatErrorExtractor
     var reasoningParser: ReasoningContentParser
 
@@ -58,18 +58,19 @@ struct RemoteChatClientDependencies {
     }
 }
 
-protocol JSONDecoding {
+protocol JSONDecoding: Sendable {
     func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
 }
 
 struct JSONDecoderWrapper: JSONDecoding {
-    private let decoder: JSONDecoder
+    private let makeDecoder: @Sendable () -> JSONDecoder
 
-    init(decoder: JSONDecoder = JSONDecoder()) {
-        self.decoder = decoder
+    init(makeDecoder: @escaping @Sendable () -> JSONDecoder = { JSONDecoder() }) {
+        self.makeDecoder = makeDecoder
     }
 
     func decode<T>(_ type: T.Type, from data: Data) throws -> T where T: Decodable {
-        try decoder.decode(type, from: data)
+        let decoder = makeDecoder()
+        return try decoder.decode(type, from: data)
     }
 }

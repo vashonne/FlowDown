@@ -83,7 +83,7 @@ public struct ChatRequest: Sendable {
         tools: [Tool]? = nil,
         toolChoice: ToolChoice? = nil,
         user: String? = nil,
-        @ChatMessageBuilder messages: () -> [Message]
+        @ChatMessageBuilder messages: @Sendable () -> [Message]
     ) {
         self.init(
             model: model,

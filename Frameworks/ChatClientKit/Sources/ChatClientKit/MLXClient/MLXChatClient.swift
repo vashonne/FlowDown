@@ -7,7 +7,7 @@ import CoreImage
 import Foundation
 @preconcurrency import MLXLMCommon
 
-open class MLXChatClient: ChatService {
+final class MLXChatClient: ChatService {
     let modelConfiguration: ModelConfiguration
     let emptyImage: CIImage = MLXImageUtilities.placeholderImage(
         size: .init(width: 64, height: 64)
@@ -18,9 +18,9 @@ open class MLXChatClient: ChatService {
     // Hex UTF-8 bytes EF BF BD
     static let decoderErrorSuffix = String(data: Data([0xEF, 0xBF, 0xBD]), encoding: .utf8)!
 
-    public var collectedErrors: String?
+    let errorCollector = ChatServiceErrorCollector()
 
-    public init(
+    init(
         url: URL,
         preferredKind: MLXModelKind = .llm,
         coordinator: MLXModelCoordinating = MLXModelCoordinator.shared
@@ -30,7 +30,7 @@ open class MLXChatClient: ChatService {
         self.coordinator = coordinator
     }
 
-    public func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
+    func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
         logger.infoFile("starting non-streaming chat completion request with \(body.messages.count) messages")
         let startTime = Date()
         let resolvedBody = resolve(body: body, stream: false)
@@ -63,7 +63,7 @@ open class MLXChatClient: ChatService {
         )
     }
 
-    public func streamingChatCompletionRequest(
+    func streamingChatCompletionRequest(
         body: ChatRequestBody
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         let resolvedBody = resolve(body: body, stream: true)
@@ -78,28 +78,28 @@ open class MLXChatClient: ChatService {
         }
     }
 
-    public func chatCompletionRequest(
+    func chatCompletionRequest(
         _ request: some ChatRequestConvertible
     ) async throws -> ChatResponseBody {
         try await chatCompletionRequest(body: request.asChatRequestBody())
     }
 
-    public func streamingChatCompletionRequest(
+    func streamingChatCompletionRequest(
         _ request: some ChatRequestConvertible
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(body: request.asChatRequestBody())
     }
 
     /// Executes a local MLX completion using the Swift request DSL.
-    public func chatCompletion(
-        @ChatRequestBuilder _ builder: () -> [ChatRequest.BuildComponent]
+    func chatCompletion(
+        @ChatRequestBuilder _ builder: @Sendable () -> [ChatRequest.BuildComponent]
     ) async throws -> ChatResponseBody {
         try await chatCompletionRequest(ChatRequest(builder))
     }
 
     /// Streams a local MLX completion using the Swift request DSL.
-    public func streamingChatCompletion(
-        @ChatRequestBuilder _ builder: () -> [ChatRequest.BuildComponent]
+    func streamingChatCompletion(
+        @ChatRequestBuilder _ builder: @Sendable () -> [ChatRequest.BuildComponent]
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(ChatRequest(builder))
     }

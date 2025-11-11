@@ -10,7 +10,7 @@ import Foundation
 @preconcurrency import MLXLMCommon
 @preconcurrency import MLXVLM
 
-public enum MLXModelKind: Equatable {
+public enum MLXModelKind: Equatable, Sendable {
     case llm
     case vlm
 }
@@ -24,7 +24,7 @@ public protocol MLXModelCoordinating: Sendable {
     func reset() async
 }
 
-public protocol MLXModelLoading {
+public protocol MLXModelLoading: Sendable {
     func loadLLM(configuration: ModelConfiguration) async throws -> ModelContainer
     func loadVLM(configuration: ModelConfiguration) async throws -> ModelContainer
 }
@@ -42,9 +42,9 @@ public struct DefaultMLXModelLoader: MLXModelLoading {
 }
 
 public actor MLXModelCoordinator: MLXModelCoordinating {
-    public static let shared = MLXModelCoordinator()
+    public nonisolated static let shared = MLXModelCoordinator()
 
-    private struct CacheKey: Equatable {
+    private struct CacheKey: Equatable, Sendable {
         let identifier: ModelConfiguration.Identifier
         let kind: MLXModelKind
     }
@@ -52,7 +52,7 @@ public actor MLXModelCoordinator: MLXModelCoordinating {
     private let loader: MLXModelLoading
     private var cachedKey: CacheKey?
     private var cachedContainer: ModelContainer?
-    private var pendingTask: LoadTask?
+    private var pendingTask: Task<ModelContainer, Error>?
 
     public init(loader: MLXModelLoading = DefaultMLXModelLoader()) {
         self.loader = loader
@@ -75,15 +75,22 @@ public actor MLXModelCoordinator: MLXModelCoordinating {
         }
 
         if let task = pendingTask, cachedKey == key {
-            return try await task.value()
+            return try await task.value
         }
 
-        let task = LoadTask(model: configuration, kind: kind, loader: loader)
+        let task = Task<ModelContainer, Error> {
+            switch kind {
+            case .llm:
+                try await loader.loadLLM(configuration: configuration)
+            case .vlm:
+                try await loader.loadVLM(configuration: configuration)
+            }
+        }
         pendingTask = task
         cachedKey = key
 
         do {
-            let container = try await task.value()
+            let container = try await task.value
             cachedContainer = container
             pendingTask = nil
             return container
@@ -101,30 +108,5 @@ public actor MLXModelCoordinator: MLXModelCoordinating {
         cachedKey = nil
         pendingTask?.cancel()
         pendingTask = nil
-    }
-}
-
-private extension MLXModelCoordinator {
-    final class LoadTask {
-        private let task: Task<ModelContainer, Error>
-
-        init(model configuration: ModelConfiguration, kind: MLXModelKind, loader: MLXModelLoading) {
-            task = Task {
-                switch kind {
-                case .llm:
-                    try await loader.loadLLM(configuration: configuration)
-                case .vlm:
-                    try await loader.loadVLM(configuration: configuration)
-                }
-            }
-        }
-
-        func value() async throws -> ModelContainer {
-            try await task.value
-        }
-
-        func cancel() {
-            task.cancel()
-        }
     }
 }

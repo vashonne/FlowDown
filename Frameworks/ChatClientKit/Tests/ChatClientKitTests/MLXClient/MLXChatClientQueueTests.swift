@@ -91,11 +91,11 @@ struct MLXChatClientQueueTests {
         await secondTask.value
     }
 
-    @Test("Queue allows only a single MLX inference at a time")
+    @Test("Queue allows only a single MLX inference at a time", .enabled(if: TestHelpers.checkGPU()))
     func queue_allowsSingleInferenceAtATimeWithMLX() async throws {
-        guard TestHelpers.ensureMLXBackendAvailable() else { return }
+        guard TestHelpers.checkGPU() else { return }
 
-        let modelURL = try #require(TestHelpers.fixtureURL(named: "mlx_testing_model"))
+        let modelURL = TestHelpers.fixtureURLOrSkip(named: "mlx_testing_model")
         let client = MLXChatClient(url: modelURL, preferredKind: .llm, coordinator: MLXModelCoordinator())
         let tracker = TimingTracker()
 
@@ -175,4 +175,3 @@ struct MLXChatClientQueueTests {
         )
     }
 }
-

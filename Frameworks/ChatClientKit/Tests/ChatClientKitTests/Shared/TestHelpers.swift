@@ -9,30 +9,49 @@
 import CoreFoundation
 import CoreGraphics
 import Foundation
+import FoundationModels
 import ImageIO
 @preconcurrency import MLX
 import Testing
 
 /// Helper functions for tests
 enum TestHelpers {
-    /// Gets API key from environment variable
+    // MARK: - Test Conditions (for use with @Test(.enabled(if:)))
+
+    /// Check if API key is configured (for use with @Test(.enabled(if:)))
+    static var isOpenRouterAPIKeyConfigured: Bool {
+        loadAPIKey(named: "OPENROUTER_API_KEY") != nil
+    }
+
+    /// Check if MLX model fixture is available (for use with @Test(.enabled(if:)))
+    static var isMLXModelAvailable: Bool {
+        guard !MLX.GPU.deviceInfo().architecture.isEmpty else {
+            return false
+        }
+        return fixtureURL(named: "mlx_testing_model") != nil
+    }
+
+    /// Check if Apple Intelligence is available (for use with @Test(.enabled(if:)))
+    static var isAppleIntelligenceAvailable: Bool {
+        if #available(iOS 26, macOS 26, macCatalyst 26, *) {
+            AppleIntelligenceModel.shared.isAvailable
+        } else {
+            false
+        }
+    }
+
+    // MARK: - Test Helpers
+
+    /// Gets API key from environment variable; records an issue and returns a placeholder if missing.
     static func requireAPIKey(_ name: String = "OPENROUTER_API_KEY") -> String {
-        guard let value = ProcessInfo.processInfo.environment[name], !value.isEmpty else {
-            let url = FileManager.default.homeDirectoryForCurrentUser
-                .appendingPathComponent(".testing")
-                .appendingPathComponent("openrouter.sk")
-            let content = (try? String(contentsOf: url, encoding: .utf8))?
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            guard let content, !content.isEmpty else {
-                Issue.record("Environment variable \(name) is not set. Please define it in your .zshrc before running tests.")
-                return "sk-is-missing"
-            }
-            return content
+        guard let value = loadAPIKey(named: name) else {
+            return "sk-is-missing"
         }
         return value
     }
 
     /// Creates a RemoteChatClient configured for OpenRouter with google/gemini-2.5-pro
+    /// Precondition: API key must be configured (check with isOpenRouterAPIKeyConfigured before using)
     static func makeOpenRouterClient() -> RemoteChatClient {
         let apiKey = requireAPIKey()
         return RemoteChatClient(
@@ -45,6 +64,38 @@ enum TestHelpers {
                 "X-Title": "ChatClientKit Tests",
             ]
         )
+    }
+
+    /// Resolves a fixture URL relative to the repository root.
+    /// Precondition: Fixture must exist (check with appropriate condition before using)
+    static func fixtureURLOrSkip(named name: String, file: StaticString = #filePath) -> URL {
+        guard let url = fixtureURL(named: name, file: file) else {
+            fatalError("Fixture \(name) not found. Expected at ~/.testing/\(name) or <repo>/.test/\(name).")
+        }
+        return url
+    }
+
+    private static func loadAPIKey(named name: String) -> String? {
+        if let value = ProcessInfo.processInfo.environment[name], !value.isEmpty {
+            return value
+        }
+        #if os(macOS)
+            let url = FileManager.default.homeDirectoryForCurrentUser
+                .appendingPathComponent(".testing")
+                .appendingPathComponent("openrouter.sk")
+        #else
+            let url = FileManager.default
+                .urls(for: .documentDirectory, in: .userDomainMask)
+                .first!
+                .appendingPathComponent(".testing")
+                .appendingPathComponent("openrouter.sk")
+        #endif
+        let content = (try? String(contentsOf: url, encoding: .utf8))?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let content, !content.isEmpty else {
+            return nil
+        }
+        return content
     }
 
     /// Creates a simple test image as base64 data URL using Core Graphics
@@ -118,10 +169,18 @@ enum TestHelpers {
 
     /// Resolves a fixture URL relative to the repository root.
     static func fixtureURL(named name: String, file: StaticString = #filePath) -> URL? {
-        let homeFixture = FileManager.default
-            .homeDirectoryForCurrentUser
-            .appendingPathComponent(".testing")
-            .appendingPathComponent(name, isDirectory: true)
+        #if os(macOS)
+            let homeFixture = FileManager.default
+                .homeDirectoryForCurrentUser
+                .appendingPathComponent(".testing")
+                .appendingPathComponent(name, isDirectory: true)
+        #else
+            let homeFixture = FileManager.default
+                .urls(for: .documentDirectory, in: .userDomainMask)
+                .first!
+                .appendingPathComponent(".testing")
+                .appendingPathComponent(name, isDirectory: true)
+        #endif
 
         if FileManager.default.fileExists(atPath: homeFixture.path) {
             return homeFixture
@@ -143,11 +202,8 @@ enum TestHelpers {
         return nil
     }
 
-    /// Ensures the current host can execute MLX workloads (requires Apple Silicon GPU).
-    /// Returns false and records an issue if the backend is unavailable.
-    static func ensureMLXBackendAvailable() -> Bool {
+    static func checkGPU() -> Bool {
         guard !MLX.GPU.deviceInfo().architecture.isEmpty else {
-            Issue.record("MLX GPU backend is not available on this device; skipping MLX integration tests.")
             return false
         }
         return true

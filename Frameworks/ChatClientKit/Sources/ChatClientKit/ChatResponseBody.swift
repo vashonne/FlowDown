@@ -17,28 +17,16 @@ public struct ChatResponseBody: Decodable {
     /// The model used for the chat completion.
     public let model: String
 
-    /// Usage statistics for the completion request.
-    public let usage: ChatUsage?
-
-    /// This fingerprint represents the backend configuration that the model runs with.
-    /// Can be used in conjunction with the `seed` request parameter to understand when
-    /// backend changes have been made that might impact determinism.
-    public let systemFingerprint: String?
-
     private enum CodingKeys: String, CodingKey {
         case choices
         case created
         case model
-        case usage
-        case systemFingerprint = "system_fingerprint"
     }
 
-    public init(choices: [ChatChoice], created: Int, model: String, usage: ChatUsage? = nil, systemFingerprint: String? = nil) {
+    public init(choices: [ChatChoice], created: Int, model: String) {
         self.choices = choices
         self.created = created
         self.model = model
-        self.usage = usage
-        self.systemFingerprint = systemFingerprint
     }
 }
 

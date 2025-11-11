@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ToolCallRequest: Codable, Equatable, Hashable {
+public struct ToolCallRequest: Codable, Equatable, Hashable, Sendable {
     public var id: UUID = .init()
 
     public let name: String

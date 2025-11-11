@@ -11,7 +11,7 @@ import Testing
 
 @Suite("RemoteChatClient Tool Tests")
 struct RemoteChatClientToolTests {
-    @Test("Non-streaming chat completion with tool calls")
+    @Test("Non-streaming chat completion with tool calls", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func nonStreamingChatCompletionWithTools() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -59,7 +59,7 @@ struct RemoteChatClientToolTests {
         }
     }
 
-    @Test("Streaming chat completion with tool calls")
+    @Test("Streaming chat completion with tool calls", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func streamingChatCompletionWithTools() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -106,7 +106,7 @@ struct RemoteChatClientToolTests {
         #expect(toolCalls.count > 0 || contentChunks.count > 0)
     }
 
-    @Test("Chat completion with required tool choice")
+    @Test("Chat completion with required tool choice", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithRequiredToolChoice() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -145,7 +145,7 @@ struct RemoteChatClientToolTests {
         }
     }
 
-    @Test("Chat completion with specific tool choice")
+    @Test("Chat completion with specific tool choice", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithSpecificToolChoice() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -185,7 +185,7 @@ struct RemoteChatClientToolTests {
         }
     }
 
-    @Test("Streaming chat completion collects tool calls")
+    @Test("Streaming chat completion collects tool calls", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func streamingCollectsToolCalls() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 

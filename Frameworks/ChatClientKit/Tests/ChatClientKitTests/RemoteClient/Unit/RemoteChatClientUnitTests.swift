@@ -257,7 +257,7 @@ struct RemoteChatClientUnitTests {
 
 // MARK: - Test Doubles
 
-private final class MockURLSession: URLSessioning {
+private final class MockURLSession: URLSessioning, @unchecked Sendable {
     var result: Result<(Data, URLResponse), Swift.Error>
     private(set) var lastRequest: URLRequest?
 
@@ -271,7 +271,7 @@ private final class MockURLSession: URLSessioning {
     }
 }
 
-private final class MockEventSourceFactory: EventSourceProducing {
+private final class MockEventSourceFactory: EventSourceProducing, @unchecked Sendable {
     var recordedEvents: [EventSource.EventType] = []
     private(set) var lastRequest: URLRequest?
 

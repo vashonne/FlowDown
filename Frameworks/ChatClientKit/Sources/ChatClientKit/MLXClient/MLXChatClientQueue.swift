@@ -7,8 +7,8 @@
 
 import Foundation
 
-public final class MLXChatClientQueue {
-    public static let shared = MLXChatClientQueue()
+public final class MLXChatClientQueue: @unchecked Sendable {
+    public nonisolated static let shared = MLXChatClientQueue()
 
     private let semaphore = DispatchSemaphore(value: 1)
     private let lock = NSLock()

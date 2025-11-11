@@ -1,4 +1,5 @@
 import AppIntents
+import ChatClientKit
 import Foundation
 
 enum ShortcutsEntities {

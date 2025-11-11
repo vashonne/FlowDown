@@ -42,7 +42,7 @@ extension ModelManager {
                     url: ModelManager.shared.modelContent(for: model),
                     preferredKind: preferredKind
                 )
-                client.collectedErrors = nil
+                await client.errorCollector.clear()
 
                 let userContent: ChatRequestBody.Message.MessageContent<String, [ChatRequestBody.Message.ContentPart]> = {
                     guard model.capabilities.contains(.visual),
@@ -100,7 +100,7 @@ extension ModelManager {
                    reasoningContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                    collectedToolCalls.isEmpty
                 {
-                    if let error = client.collectedErrors, !error.isEmpty {
+                    if let error = await client.collectedErrors, !error.isEmpty {
                         throw NSError(
                             domain: "Model",
                             code: -1,
@@ -212,10 +212,18 @@ extension ModelManager {
             }
             Task {
                 do {
-                    let session = LanguageModelSession()
-                    let prompt = "Reply YES to every query. YES or NO"
-                    let response = try await session.respond(to: prompt)
-                    if !response.content.isEmpty {
+                    let client = AppleIntelligenceChatClient()
+                    let body = ChatRequestBody(
+                        messages: [
+                            .system(content: .text("Reply YES to every query.")),
+                            .user(content: .text("YES or NO")),
+                        ],
+                        temperature: 0
+                    )
+                    let response = try await client.chatCompletionRequest(body: body)
+                    if let content = response.choices.first?.message.content, !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        completion(.success(()))
+                    } else if let toolCalls = response.choices.first?.message.toolCalls, !toolCalls.isEmpty {
                         completion(.success(()))
                     } else {
                         completion(.failure(NSError(domain: "AppleIntelligence", code: -1, userInfo: [NSLocalizedDescriptionKey: "No response from Apple Intelligence."])))
@@ -342,7 +350,7 @@ extension ModelManager {
             for: modelID,
             additionalBodyField: modelBodyFields(for: modelID)
         )
-        client.collectedErrors = nil
+        await client.errorCollector.clear()
         let requestTemperature: Double = switch temperatureStrategy(for: modelID) {
         case let .send(value):
             value
@@ -461,7 +469,7 @@ extension ModelManager {
                        final.toolCallRequests.isEmpty
                     {
                         // if not, collect the error if we had any
-                        if let error = client.collectedErrors {
+                        if let error = await client.collectedErrors {
                             throw NSError(
                                 domain: String(localized: "Inference Service"),
                                 code: -1,

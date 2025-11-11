@@ -59,9 +59,9 @@ public enum ChatRequestBuilder {
 }
 
 public extension ChatRequest {
-    typealias BuildComponent = (inout ChatRequest) -> Void
+    typealias BuildComponent = @Sendable (inout ChatRequest) -> Void
 
-    init(@ChatRequestBuilder _ content: () -> [BuildComponent]) {
+    init(@ChatRequestBuilder _ content: @Sendable () -> [BuildComponent]) {
         self.init(messages: [])
         apply(content())
     }
@@ -81,7 +81,7 @@ public extension ChatRequest {
     }
 
     static func messages(
-        @ChatMessageBuilder _ builder: @escaping () -> [Message]
+        @ChatMessageBuilder _ builder: @Sendable @escaping () -> [Message]
     ) -> BuildComponent {
         { request in
             request.messages = builder()
@@ -89,7 +89,7 @@ public extension ChatRequest {
     }
 
     static func appendMessages(
-        @ChatMessageBuilder _ builder: @escaping () -> [Message]
+        @ChatMessageBuilder _ builder: @Sendable @escaping () -> [Message]
     ) -> BuildComponent {
         { request in
             request.messages.append(contentsOf: builder())

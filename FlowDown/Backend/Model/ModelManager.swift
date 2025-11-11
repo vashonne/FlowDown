@@ -6,6 +6,7 @@
 //
 
 import AlertController
+import ChatClientKit
 import Combine
 import ConfigurableKit
 import Foundation

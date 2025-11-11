@@ -17,7 +17,7 @@ import Testing
 struct MLXModelCoordinatorTests {
     @Test("Coordinator caches containers for identical configuration and kind")
     func coordinator_cachesContainerForSameKey() async throws {
-        guard TestHelpers.ensureMLXBackendAvailable() else { return }
+        guard TestHelpers.checkGPU() else { return }
 
         let config = try modelConfiguration()
         let coordinator = MLXModelCoordinator()
@@ -30,7 +30,7 @@ struct MLXModelCoordinatorTests {
 
     @Test("Coordinator reuses in-flight task for identical concurrent requests")
     func coordinator_reusesInFlightLoads() async throws {
-        guard TestHelpers.ensureMLXBackendAvailable() else { return }
+        guard TestHelpers.checkGPU() else { return }
 
         let config = try modelConfiguration()
         let coordinator = MLXModelCoordinator()
@@ -44,7 +44,7 @@ struct MLXModelCoordinatorTests {
 
     @Test("Reset clears cached container")
     func coordinator_resetClearsCache() async throws {
-        guard TestHelpers.ensureMLXBackendAvailable() else { return }
+        guard TestHelpers.checkGPU() else { return }
 
         let config = try modelConfiguration()
         let coordinator = MLXModelCoordinator()
@@ -58,6 +58,6 @@ struct MLXModelCoordinatorTests {
 }
 
 private func modelConfiguration() throws -> ModelConfiguration {
-    let url = try #require(TestHelpers.fixtureURL(named: "mlx_testing_model"))
+    let url = try TestHelpers.fixtureURLOrSkip(named: "mlx_testing_model")
     return ModelConfiguration(directory: url)
 }

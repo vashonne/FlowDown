@@ -5,13 +5,13 @@
 
 import Foundation
 
-public enum ChatServiceStreamObject {
+public enum ChatServiceStreamObject: Sendable {
     case chatCompletionChunk(chunk: ChatCompletionChunk)
     case tool(call: ToolCallRequest)
 }
 
-public protocol ChatService: AnyObject {
-    var collectedErrors: String? { get set }
+public protocol ChatService: AnyObject, Sendable {
+    var errorCollector: ChatServiceErrorCollector { get }
 
     /// Initiates a non-streaming chat completion request to /v1/chat/completions.
     ///
@@ -32,6 +32,16 @@ public protocol ChatService: AnyObject {
     func streamingChatCompletionRequest(
         body: ChatRequestBody
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject>
+}
+
+public extension ChatService {
+    var collectedErrors: String? {
+        get async { await errorCollector.getError() }
+    }
+
+    func setCollectedErrors(_ error: String?) async {
+        await errorCollector.collect(error)
+    }
 }
 
 let REASONING_START_TOKEN: String = "<think>"

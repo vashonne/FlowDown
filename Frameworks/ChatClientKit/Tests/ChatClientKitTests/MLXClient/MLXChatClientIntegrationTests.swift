@@ -12,11 +12,9 @@ import Testing
 
 @Suite("MLX ChatClient Integration")
 struct MLXChatClientIntegrationTests {
-    @Test("Local MLX chat completion returns content")
+    @Test("Local MLX chat completion returns content", .enabled(if: TestHelpers.isMLXModelAvailable))
     func localModelProducesContent() async throws {
-        guard TestHelpers.ensureMLXBackendAvailable() else { return }
-
-        let modelURL = try #require(TestHelpers.fixtureURL(named: "mlx_testing_model"))
+        let modelURL = TestHelpers.fixtureURLOrSkip(named: "mlx_testing_model")
         let client = MLXChatClient(url: modelURL)
 
         let response = try await client.chatCompletionRequest(

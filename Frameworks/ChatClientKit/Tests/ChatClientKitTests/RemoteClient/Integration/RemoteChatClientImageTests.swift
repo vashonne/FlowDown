@@ -11,7 +11,7 @@ import Testing
 
 @Suite("RemoteChatClient Image Tests")
 struct RemoteChatClientImageTests {
-    @Test("Non-streaming chat completion with image input")
+    @Test("Non-streaming chat completion with image input", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func nonStreamingChatCompletionWithImage() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -33,7 +33,7 @@ struct RemoteChatClientImageTests {
         #expect(content.lowercased().contains("red") == true)
     }
 
-    @Test("Streaming chat completion with image input")
+    @Test("Streaming chat completion with image input", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func streamingChatCompletionWithImage() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -60,7 +60,7 @@ struct RemoteChatClientImageTests {
         #expect(fullContent.isEmpty == false)
     }
 
-    @Test("Chat completion with image and text")
+    @Test("Chat completion with image and text", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithImageAndText() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -80,7 +80,7 @@ struct RemoteChatClientImageTests {
         #expect(content.isEmpty == false)
     }
 
-    @Test("Chat completion with multiple images")
+    @Test("Chat completion with multiple images", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithMultipleImages() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -102,7 +102,7 @@ struct RemoteChatClientImageTests {
         #expect(content.isEmpty == false)
     }
 
-    @Test("Chat completion with image detail parameter")
+    @Test("Chat completion with image detail parameter", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithImageDetail() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -122,7 +122,7 @@ struct RemoteChatClientImageTests {
         #expect(content.isEmpty == false)
     }
 
-    @Test("Streaming chat completion with image in conversation")
+    @Test("Streaming chat completion with image in conversation", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func streamingChatCompletionWithImageInConversation() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 

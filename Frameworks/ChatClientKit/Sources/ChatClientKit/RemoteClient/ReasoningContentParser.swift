@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ReasoningContentParser {
+struct ReasoningContentParser: Sendable {
     let startToken: String
     let endToken: String
 
@@ -44,7 +44,7 @@ struct ReasoningContentParser {
     }
 }
 
-struct ReasoningStreamReducer {
+struct ReasoningStreamReducer: Sendable {
     private let parser: ReasoningContentParser
     private var isInsideReasoningContent = false
     private var contentBuffer = ""

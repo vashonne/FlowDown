@@ -11,7 +11,7 @@ import Testing
 
 @Suite("RemoteChatClient Basic Tests")
 struct RemoteChatClientBasicTests {
-    @Test("Non-streaming chat completion with text message")
+    @Test("Non-streaming chat completion with text message", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func nonStreamingChatCompletion() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -30,7 +30,7 @@ struct RemoteChatClientBasicTests {
         #expect(message?.content?.lowercased().contains("hello") == true)
     }
 
-    @Test("Streaming chat completion with text message")
+    @Test("Streaming chat completion with text message", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func streamingChatCompletion() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -57,7 +57,7 @@ struct RemoteChatClientBasicTests {
         #expect(fullContent.contains("1") || fullContent.contains("2") || fullContent.contains("3"))
     }
 
-    @Test("Chat completion with system message")
+    @Test("Chat completion with system message", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithSystemMessage() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -75,7 +75,7 @@ struct RemoteChatClientBasicTests {
         }
     }
 
-    @Test("Chat completion with multiple messages")
+    @Test("Chat completion with multiple messages", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithMultipleMessages() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -95,7 +95,7 @@ struct RemoteChatClientBasicTests {
         #expect(content.lowercased().contains("alice") == true)
     }
 
-    @Test("Chat completion with temperature parameter")
+    @Test("Chat completion with temperature parameter", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithTemperature() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -113,7 +113,7 @@ struct RemoteChatClientBasicTests {
         #expect(content.isEmpty == false)
     }
 
-    @Test("Chat completion with max tokens")
+    @Test("Chat completion with max tokens", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func chatCompletionWithMaxTokens() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 
@@ -133,7 +133,7 @@ struct RemoteChatClientBasicTests {
         #expect([content, reasoning, reasoningContent].allSatisfy(\.isEmpty) == false)
     }
 
-    @Test("Streaming chat completion collects all chunks")
+    @Test("Streaming chat completion collects all chunks", .enabled(if: TestHelpers.isOpenRouterAPIKeyConfigured))
     func streamingCollectsAllChunks() async throws {
         let client = TestHelpers.makeOpenRouterClient()
 

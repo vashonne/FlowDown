@@ -7,9 +7,6 @@
 //
 
 import Foundation
-#if canImport(FoundationNetworking)
-    import FoundationNetworking
-#endif
 
 ///
 /// An `EventSource` instance opens a persistent connection to an HTTP server,
@@ -198,23 +195,12 @@ public extension EventSource {
                     }
                 }
 
-                #if compiler(>=6.0)
-                    continuation.onTermination = { @Sendable [weak self] _ in
-                        sessionDelegateTask.cancel()
-                        logger.debugFile("cancelling event source dataTask due to task termination")
-                        urlSession.invalidateAndCancel()
-                        Task { self?.close(stream: continuation, urlSession: urlSession) }
-                    }
-                #else
-                    continuation.onTermination = { @Sendable _ in
-                        sessionDelegateTask.cancel()
-                        logger.debugFile("cancelling event source dataTask due to task termination")
-                        urlSession.invalidateAndCancel()
-                        Task { [weak self] in
-                            await self?.close(stream: continuation, urlSession: urlSession)
-                        }
-                    }
-                #endif
+                continuation.onTermination = { @Sendable [weak self] _ in
+                    sessionDelegateTask.cancel()
+                    logger.debugFile("cancelling event source dataTask due to task termination")
+                    urlSession.invalidateAndCancel()
+                    Task { self?.close(stream: continuation, urlSession: urlSession) }
+                }
 
                 urlSessionDataTask.resume()
                 readyState = .connecting

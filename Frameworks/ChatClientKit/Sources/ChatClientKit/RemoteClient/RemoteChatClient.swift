@@ -9,34 +9,34 @@
 import Foundation
 import ServerEvent
 
-open class RemoteChatClient: ChatService {
+final class RemoteChatClient: ChatService {
     /// The ID of the model to use.
     ///
     /// The required section should be in alphabetical order.
-    public let model: String
-    public var baseURL: String?
-    public var path: String?
-    public var apiKey: String?
+    let model: String
+    let baseURL: String?
+    let path: String?
+    let apiKey: String?
 
-    public enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case invalidURL
         case invalidApiKey
         case invalidData
     }
 
-    public var collectedErrors: String?
+    let errorCollector = ChatServiceErrorCollector()
 
-    public var additionalHeaders: [String: String] = [:]
-    public var additionalField: [String: Any] = [:]
+    let additionalHeaders: [String: String]
+    nonisolated(unsafe) let additionalBodyField: [String: Any]
 
     private let session: URLSessioning
     private let eventSourceFactory: EventSourceProducing
-    private let responseDecoderFactory: () -> JSONDecoding
-    private let chunkDecoderFactory: () -> JSONDecoding
+    private let responseDecoderFactory: @Sendable () -> JSONDecoding
+    private let chunkDecoderFactory: @Sendable () -> JSONDecoding
     private let errorExtractor: RemoteChatErrorExtractor
     private let reasoningParser: ReasoningContentParser
 
-    public convenience init(
+    convenience init(
         model: String,
         baseURL: String? = nil,
         path: String? = nil,
@@ -69,7 +69,7 @@ open class RemoteChatClient: ChatService {
         self.path = path
         self.apiKey = apiKey
         self.additionalHeaders = additionalHeaders
-        additionalField = additionalBodyField
+        self.additionalBodyField = additionalBodyField
         session = dependencies.session
         eventSourceFactory = dependencies.eventSourceFactory
         responseDecoderFactory = dependencies.responseDecoderFactory
@@ -78,7 +78,7 @@ open class RemoteChatClient: ChatService {
         reasoningParser = dependencies.reasoningParser
     }
 
-    public func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
+    func chatCompletionRequest(body: ChatRequestBody) async throws -> ChatResponseBody {
         logger.infoFile("starting non-streaming request to model: \(model) with \(body.messages.count) messages")
         let startTime = Date()
 
@@ -103,7 +103,7 @@ open class RemoteChatClient: ChatService {
         return response
     }
 
-    public func streamingChatCompletionRequest(
+    func streamingChatCompletionRequest(
         body: ChatRequestBody
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         let requestBody = resolve(body: body, stream: true)
@@ -118,17 +118,17 @@ open class RemoteChatClient: ChatService {
         )
 
         return processor.stream(request: request) { [weak self] error in
-            self?.collect(error: error)
+            await self?.collect(error: error)
         }
     }
 
-    public func chatCompletionRequest(
+    func chatCompletionRequest(
         _ request: some ChatRequestConvertible
     ) async throws -> ChatResponseBody {
         try await chatCompletionRequest(body: request.asChatRequestBody())
     }
 
-    public func streamingChatCompletionRequest(
+    func streamingChatCompletionRequest(
         _ request: some ChatRequestConvertible
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(body: request.asChatRequestBody())
@@ -145,20 +145,20 @@ open class RemoteChatClient: ChatService {
     ///     }
     /// }
     /// ```
-    public func chatCompletion(
-        @ChatRequestBuilder _ builder: () -> [ChatRequest.BuildComponent]
+    func chatCompletion(
+        @ChatRequestBuilder _ builder: @Sendable () -> [ChatRequest.BuildComponent]
     ) async throws -> ChatResponseBody {
         try await chatCompletionRequest(ChatRequest(builder))
     }
 
     /// Streams a chat completion using the Swift request DSL.
-    public func streamingChatCompletion(
-        @ChatRequestBuilder _ builder: () -> [ChatRequest.BuildComponent]
+    func streamingChatCompletion(
+        @ChatRequestBuilder _ builder: @Sendable () -> [ChatRequest.BuildComponent]
     ) async throws -> AnyAsyncSequence<ChatServiceStreamObject> {
         try await streamingChatCompletionRequest(ChatRequest(builder))
     }
 
-    public func makeURLRequest(
+    func makeURLRequest(
         from request: some ChatRequestConvertible,
         stream: Bool
     ) throws -> URLRequest {
@@ -177,7 +177,7 @@ open class RemoteChatClient: ChatService {
 
     private func makeURLRequest(body: ChatRequestBody) throws -> URLRequest {
         let builder = makeRequestBuilder()
-        return try builder.makeRequest(body: body, additionalField: additionalField)
+        return try builder.makeRequest(body: body, additionalField: additionalBodyField)
     }
 
     private func resolve(body: ChatRequestBody, stream: Bool) -> ChatRequestBody {
@@ -188,23 +188,23 @@ open class RemoteChatClient: ChatService {
         return requestBody
     }
 
-    private func collect(error: Swift.Error) {
+    private func collect(error: Swift.Error) async {
         if let error = error as? EventSourceError {
             switch error {
             case .undefinedConnectionError:
-                collectedErrors = String(localized: "Unable to connect to the server.")
+                await errorCollector.collect(String(localized: "Unable to connect to the server."))
             case let .connectionError(statusCode, response):
                 if let decodedError = errorExtractor.extractError(from: response) {
-                    collectedErrors = decodedError.localizedDescription
+                    await errorCollector.collect(decodedError.localizedDescription)
                 } else {
-                    collectedErrors = String(localized: "Connection error: \(statusCode)")
+                    await errorCollector.collect(String(localized: "Connection error: \(statusCode)"))
                 }
             case .alreadyConsumed:
                 assertionFailure()
             }
             return
         }
-        collectedErrors = error.localizedDescription
+        await errorCollector.collect(error.localizedDescription)
         logger.errorFile("collected error: \(error.localizedDescription)")
     }
 }

@@ -49,7 +49,7 @@ public struct ChatRequestBody: Sendable, Encodable {
     /// Specifies the format that the model must output. Please see the docstring on `ResponseFormat` for important usage information
     public let responseFormat: ResponseFormat?
 
-    /// This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result. Determinism is not guaranteed, and you should refer to the `systemFingerprint` response parameter to monitor changes in the backend.
+    /// This feature is in Beta. If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same `seed` and parameters should return the same result. Determinism is not guaranteed.
     public let seed: Int?
 
     /// Up to 4 sequences where the API will stop generating further tokens.
@@ -443,9 +443,7 @@ public extension ChatRequestBody {
 public extension ChatRequestBody {
     struct StreamOptions: Sendable, Encodable {
         /// If set, an additional chunk will be streamed before the data: [DONE] message.
-        /// The usage field on this chunk shows the token usage statistics for the entire request,
-        /// and the choices field will always be an empty array. All other chunks will also include
-        /// a usage field, but with a null value.
+        /// The choices field will always be an empty array on this chunk.
         let includeUsage: Bool
 
         private enum CodingKeys: String, CodingKey {

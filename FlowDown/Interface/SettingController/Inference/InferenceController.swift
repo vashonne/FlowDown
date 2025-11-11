@@ -6,6 +6,7 @@
 //
 
 import AlertController
+import ChatClientKit
 import ConfigurableKit
 import MLX
 import UIKit

@@ -28,10 +28,15 @@ struct RemoteChatStreamProcessor {
 
     func stream(
         request: URLRequest,
-        collectError: @escaping (Swift.Error) -> Void
+        collectError: @Sendable @escaping (Swift.Error) async -> Void
     ) -> AnyAsyncSequence<ChatServiceStreamObject> {
+        let eventSourceFactory = eventSourceFactory
+        let chunkDecoder = chunkDecoder
+        let errorExtractor = errorExtractor
+        let reasoningParser = reasoningParser
+
         let stream = AsyncStream<ChatServiceStreamObject> { continuation in
-            Task.detached {
+            Task.detached(priority: .userInitiated) { [collectError, eventSourceFactory, chunkDecoder, errorExtractor, reasoningParser, request] in
                 var canDecodeReasoningContent = true
                 var reducer = ReasoningStreamReducer(parser: reasoningParser)
                 let toolCallCollector = ToolCallCollector()
@@ -46,7 +51,7 @@ struct RemoteChatStreamProcessor {
                         logger.infoFile("connection was opened.")
                     case let .error(error):
                         logger.errorFile("received an error: \(error)")
-                        collectError(error)
+                        await collectError(error)
                     case let .event(event):
                         guard let data = event.data?.data(using: .utf8) else {
                             continue
@@ -92,11 +97,11 @@ struct RemoteChatStreamProcessor {
                             if let text = String(data: data, encoding: .utf8) {
                                 logger.log("text content associated with this error \(text)")
                             }
-                            collectError(error)
+                            await collectError(error)
                         }
 
                         if let decodeError = errorExtractor.extractError(from: data) {
-                            collectError(decodeError)
+                            await collectError(decodeError)
                         }
                     case .closed:
                         logger.infoFile("connection was closed.")

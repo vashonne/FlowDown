@@ -47,6 +47,10 @@ class ChatSelection {
     private let subject = CurrentValueSubject<Selection, Never>(.none)
     let selection: AnyPublisher<Selection, Never>
 
+    var currentSelection: Selection {
+        subject.value
+    }
+
     private var cancellables = Set<AnyCancellable>()
 
     private init() {

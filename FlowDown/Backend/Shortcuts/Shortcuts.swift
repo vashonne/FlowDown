@@ -57,6 +57,42 @@ struct Shortcuts: AppShortcutsProvider {
             )
         )
 
+        shortcuts.append(
+            AppShortcut(
+                intent: CreateNewConversationIntent(),
+                phrases: [
+                    "Create new conversation on \(.applicationName)",
+                    "New chat on \(.applicationName)",
+                ],
+                shortTitle: LocalizedStringResource("New Conversation"),
+                systemImageName: "plus.message"
+            )
+        )
+
+        shortcuts.append(
+            AppShortcut(
+                intent: FillConversationMessageIntent(),
+                phrases: [
+                    "Fill message on \(.applicationName)",
+                    "Add content to conversation on \(.applicationName)",
+                ],
+                shortTitle: LocalizedStringResource("Fill Message"),
+                systemImageName: "pencil.and.list.clipboard"
+            )
+        )
+
+        shortcuts.append(
+            AppShortcut(
+                intent: ShowAndSendConversationIntent(),
+                phrases: [
+                    "Send conversation on \(.applicationName)",
+                    "Show and send on \(.applicationName)",
+                ],
+                shortTitle: LocalizedStringResource("Show & Send"),
+                systemImageName: "paperplane.circle"
+            )
+        )
+
         if #available(iOS 18.0, macCatalyst 18.0, *) {
             shortcuts.append(
                 AppShortcut(

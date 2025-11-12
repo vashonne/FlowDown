@@ -162,6 +162,28 @@ class ChatView: UIView {
                 self?.editor.updateModelName()
             }
             .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: NSNotification.Name("RefreshRichEditor"))
+            .ensureMainThread()
+            .sink { [weak self] notification in
+                guard let self,
+                      let conversationID = notification.object as? Conversation.ID,
+                      conversationID == conversationIdentifier
+                else { return }
+                editor.restoreEditorStatusIfPossible()
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: NSNotification.Name("TriggerSendMessage"))
+            .ensureMainThread()
+            .sink { [weak self] notification in
+                guard let self,
+                      let conversationID = notification.object as? Conversation.ID,
+                      conversationID == conversationIdentifier
+                else { return }
+                editor.submitValues()
+            }
+            .store(in: &cancellables)
     }
 
     @available(*, unavailable)

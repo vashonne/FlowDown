@@ -66,7 +66,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "[%@] %@"
+            "value" : "【%@】%@"
           }
         }
       }
@@ -101,7 +101,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ • %@"
+            "value" : "%@ · %@"
           }
         }
       }
@@ -213,7 +213,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%d. [%@] %@"
+            "value" : "%d．【%@】%@"
           }
         }
       }
@@ -453,6 +453,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加细节"
+          }
+        }
+      }
+    },
+    "Add text, images, or audio to the rich editor's temporary storage for the selected conversation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add text, images, or audio to the rich editor's temporary storage for the selected conversation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将文本、图像或音频添加到所选会话的富文本编辑器暂存区"
           }
         }
       }
@@ -1901,6 +1917,12 @@
     },
     "Change the behavior of the application, adjust text sizes, tuning editor behavior." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change the behavior of the application, adjust text sizes, tuning editor behavior."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2567,6 +2589,12 @@
     },
     "Configure tool settings, choose search engine for internet searches, adding custom tools." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure tool settings, choose search engine for internet searches, adding custom tools."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3217,6 +3245,38 @@
         }
       }
     },
+    "Create a new conversation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a new conversation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建新会话"
+          }
+        }
+      }
+    },
+    "Create a new conversation and optionally switch to it" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create a new conversation and optionally switch to it"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建新会话，并可选择切换到该会话"
+          }
+        }
+      }
+    },
     "Create Conversation Link" : {
       "localizations" : {
         "en" : {
@@ -3245,6 +3305,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "创建副本"
+          }
+        }
+      }
+    },
+    "Create New Conversation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create New Conversation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "创建新会话"
           }
         }
       }
@@ -3443,6 +3519,12 @@
     },
     "Data" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6050,6 +6132,54 @@
         }
       }
     },
+    "Fill Conversation Message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill Conversation Message"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "填充会话消息"
+          }
+        }
+      }
+    },
+    "Fill Message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill Message"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "填充消息"
+          }
+        }
+      }
+    },
+    "Fill message for current conversation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill message for current conversation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为当前会话填充消息"
+          }
+        }
+      }
+    },
     "Filter by Category" : {
       "localizations" : {
         "en" : {
@@ -6424,6 +6554,12 @@
     },
     "Get control of your data, configure cloud sync, export database or reset the app." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get control of your data, configure cloud sync, export database or reset the app."
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6763,6 +6899,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Image"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "图片"
+          }
+        }
+      }
+    },
+    "Images" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Images"
           }
         },
         "zh-Hans" : {
@@ -8510,6 +8662,22 @@
         }
       }
     },
+    "Message filled successfully" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message filled successfully"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已成功填充消息"
+          }
+        }
+      }
+    },
     "Metadata" : {
       "localizations" : {
         "en" : {
@@ -10013,6 +10181,12 @@
     },
     "Permission" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permission"
+          }
+        },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12027,6 +12201,54 @@
         }
       }
     },
+    "Show & Send" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show & Send"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示并发送"
+          }
+        }
+      }
+    },
+    "Show ${conversation} and send message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show ${conversation} and send message"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示 ${conversation} 并发送消息"
+          }
+        }
+      }
+    },
+    "Show and Send Conversation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show and Send Conversation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示并发送会话"
+          }
+        }
+      }
+    },
     "Show Cloud Models" : {
       "localizations" : {
         "en" : {
@@ -12701,6 +12923,54 @@
         }
       }
     },
+    "Switch to a conversation and automatically send the message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to a conversation and automatically send the message"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换到指定会话并自动发送消息"
+          }
+        }
+      }
+    },
+    "Switch to Conversation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switch to Conversation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换到会话"
+          }
+        }
+      }
+    },
+    "Switched to conversation and triggered send" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switched to conversation and triggered send"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已切换到该会话并触发发送"
+          }
+        }
+      }
+    },
     "Symbols" : {
       "comment" : "Emoji Category",
       "localizations" : {
@@ -12975,6 +13245,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "终止"
+          }
+        }
+      }
+    },
+    "Text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文本"
           }
         }
       }

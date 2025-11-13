@@ -11256,22 +11256,6 @@
         }
       }
     },
-    "Request User Input" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Request User Input"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请求用户输入"
-          }
-        }
-      }
-    },
     "Requires iOS 26+" : {
       "localizations" : {
         "en" : {

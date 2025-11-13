@@ -101,9 +101,6 @@ extension ConversationSession {
             assert(pendingToolCalls.isEmpty)
             return false
         }
-        pendingToolCalls = pendingToolCalls.filter {
-            $0.name.lowercased() != MTWaitForNextRound().functionName.lowercased()
-        }
         guard !pendingToolCalls.isEmpty else { return false }
         assert(modelWillExecuteTools)
 

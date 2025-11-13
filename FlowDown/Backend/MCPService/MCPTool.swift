@@ -47,7 +47,7 @@ class MCPTool: ModelTool, @unchecked Sendable {
             name: toolInfo.name,
             description: toolInfo.description ?? String(localized: "MCP Tool"),
             parameters: parameters,
-            strict: false
+            strict: true
         )
     }
 

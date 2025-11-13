@@ -37,8 +37,6 @@ class ModelToolsManager {
     private init() {
         #if targetEnvironment(macCatalyst)
             tools = [
-                MTWaitForNextRound(),
-
                 MTAddCalendarTool(),
                 MTQueryCalendarTool(),
 
@@ -57,8 +55,6 @@ class ModelToolsManager {
             ]
         #else
             tools = [
-                MTWaitForNextRound(),
-
                 MTAddCalendarTool(),
                 MTQueryCalendarTool(),
 
@@ -86,13 +82,11 @@ class ModelToolsManager {
             #if DEBUG
                 assert(registeredToolNames.insert(tool.functionName).inserted)
             #endif
-            if tool is MTWaitForNextRound { continue }
         }
     }
 
     var enabledTools: [ModelTool] {
         tools.filter { tool in
-            if tool is MTWaitForNextRound { return true }
             if tool is MTWebSearchTool { return true }
             return tool.isEnabled
         }
@@ -107,7 +101,6 @@ class ModelToolsManager {
 
     var configurableTools: [ModelTool] {
         tools.filter { tool in
-            if tool is MTWaitForNextRound { return false }
             if tool is MTWebSearchTool { return false }
             if tool is MTStoreMemoryTool { return false }
             if tool is MTRecallMemoryTool { return false }

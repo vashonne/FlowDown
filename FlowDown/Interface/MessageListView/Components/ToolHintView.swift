@@ -13,22 +13,21 @@ final class ToolHintView: MessageListRowView {
         case failed
     }
 
-    var text: String? {
-        didSet { updateContentText() }
-    }
+    var text: String?
 
-    var toolName: String = .init() {
-        didSet { updateContentText() }
-    }
+    var toolName: String = .init()
 
     var state: State = .running {
-        didSet { updateStateImage() }
+        didSet {
+            updateContentText()
+            updateStateImage()
+        }
     }
 
     var clickHandler: (() -> Void)?
 
     private let backgroundGradientLayer = CAGradientLayer()
-    private let label: UILabel = .init().with {
+    private let label: ShimmerTextLabel = .init().with {
         $0.font = UIFont.preferredFont(forTextStyle: .body)
         $0.textColor = .label
         $0.minimumScaleFactor = 0.5
@@ -37,6 +36,7 @@ final class ToolHintView: MessageListRowView {
         $0.numberOfLines = 1
         $0.adjustsFontSizeToFitWidth = true
         $0.textAlignment = .left
+        $0.animationDuration = 1.6
     }
 
     private let symbolView: UIImageView = .init().with {
@@ -110,6 +110,7 @@ final class ToolHintView: MessageListRowView {
             let image = UIImage(systemName: "checkmark.seal", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemGreen
+            label.stopShimmer()
         case .running:
             backgroundGradientLayer.colors = [
                 UIColor.systemBlue.withAlphaComponent(0.08).cgColor,
@@ -118,6 +119,7 @@ final class ToolHintView: MessageListRowView {
             let image = UIImage(systemName: "hourglass", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemBlue
+            label.startShimmer()
         default:
             backgroundGradientLayer.colors = [
                 UIColor.systemRed.withAlphaComponent(0.08).cgColor,
@@ -126,6 +128,7 @@ final class ToolHintView: MessageListRowView {
             let image = UIImage(systemName: "xmark.seal", withConfiguration: configuration)
             symbolView.image = image
             symbolView.tintColor = .systemRed
+            label.stopShimmer()
         }
         postUpdate()
     }
@@ -134,13 +137,13 @@ final class ToolHintView: MessageListRowView {
         switch state {
         case .running:
             isClickable = false
-            label.text = .init(localized: "Tool call for \(toolName) running.")
+            label.text = String(localized: "Tool call for \(toolName) running")
         case .suceeded:
             isClickable = true
-            label.text = .init(localized: "Tool call for \(toolName) completed.")
+            label.text = String(localized: "Tool call for \(toolName) completed.")
         case .failed:
             isClickable = true
-            label.text = .init(localized: "Tool call for \(toolName) failed.")
+            label.text = String(localized: "Tool call for \(toolName) failed.")
         }
         postUpdate()
     }

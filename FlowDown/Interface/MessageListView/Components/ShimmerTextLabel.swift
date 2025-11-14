@@ -201,7 +201,6 @@ final class ShimmerTextLabel: UILabel {
             ]
 
             // Use gradientCenterLocation to control where the bright spot appears
-            let edgeWidth = (1.0 - gradientCenterLocation) * 0.5
             gradientLayer.locations = [
                 0,
                 NSNumber(value: gradientCenterLocation),
